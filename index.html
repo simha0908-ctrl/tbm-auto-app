@@ -2497,10 +2497,54 @@ JSON만 출력하고 다른 설명은 쓰지 마세요.`;
         }
       );
 
+      // 429 → 다른 모델로 자동 fallback
+      if (resp.status === 429) {
+        const fallbackModel = (chosenModel === 'gemini-2.0-flash') ? 'gemini-1.5-flash' : 'gemini-1.5-flash-latest';
+        showToast('⏳ 모델 한도 초과 → ' + fallbackModel + ' 로 전환 중...');
+        const retry = await fetch(
+          'https://generativelanguage.googleapis.com/v1beta/models/' + fallbackModel + ':generateContent?key=' + apiKey,
+          {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [
+                { inlineData: { mimeType: mimeType, data: base64Data } },
+                { text: prompt }
+              ]}],
+              generationConfig: { maxOutputTokens: 512 }
+            })
+          }
+        );
+        if (!retry.ok) {
+          const errText = await retry.text();
+          throw new Error('HTTP ' + retry.status + ' (' + fallbackModel + '): ' + errText.slice(0, 80));
+        }
+        const retryData = await retry.json();
+        const retryText = (retryData.candidates?.[0]?.content?.parts?.[0]?.text) || '';
+        const jsonMatch2 = retryText.match(/\{[\s\S]*\}/);
+        if (jsonMatch2) {
+          let ex = {};
+          try { ex = JSON.parse(jsonMatch2[0]); } catch(e) {}
+          sessionData.location     = ex.location     || '';
+          sessionData.date         = ex.date         || getTodayStr();
+          sessionData.time_start   = ex.time_start   || '08:00';
+          sessionData.time_end     = ex.time_end     || '17:00';
+          sessionData.vehicle_num  = ex.vehicle_num  || '';
+          sessionData.worker1_name = ex.worker1_name || '';
+          sessionData.worker2_name = ex.worker2_name || '';
+          sessionData.worker3_name = ex.worker3_name || '';
+          sessionData.worker4_name = ex.worker4_name || '';
+          if (ex.vehicle_type === '활선' || ex.vehicle_type === '저압') selectedVehicleType = ex.vehicle_type;
+        } else {
+          showToast('⚠️ 서류 인식 실패 — 직접 입력해주세요');
+        }
+        go('s-confirm');
+        return;
+      }
+
       if (!resp.ok) {
         const errText = await resp.text();
-        const shortErr = errText.slice(0, 120);
-        throw new Error('HTTP ' + resp.status + ' (' + chosenModel + '): ' + shortErr);
+        throw new Error('HTTP ' + resp.status + ' (' + chosenModel + '): ' + errText.slice(0, 80));
       }
 
       const data = await resp.json();
