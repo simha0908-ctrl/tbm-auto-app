@@ -2460,7 +2460,7 @@ JSON만 출력하고 다른 설명은 쓰지 마세요.`;
 
     try {
       const resp = await fetch(
-        'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + apiKey,
+        'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + apiKey,
         {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
@@ -2478,7 +2478,8 @@ JSON만 출력하고 다른 설명은 쓰지 마세요.`;
 
       if (!resp.ok) {
         const errText = await resp.text();
-        throw new Error('API 오류 ' + resp.status + ': ' + errText);
+        const shortErr = errText.slice(0, 120);
+        throw new Error('HTTP ' + resp.status + ': ' + shortErr);
       }
 
       const data = await resp.json();
@@ -2509,7 +2510,8 @@ JSON만 출력하고 다른 설명은 쓰지 마세요.`;
       }
     } catch(e) {
       console.error('Vision API 오류:', e);
-      showToast('⚠️ 분석 실패 — 직접 입력해주세요');
+      const msg = e && e.message ? e.message.slice(0, 60) : String(e).slice(0, 60);
+      showToast('⚠️ 분석 실패: ' + msg);
     }
 
     go('s-confirm');
