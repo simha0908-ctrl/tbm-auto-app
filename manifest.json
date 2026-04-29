@@ -2,7 +2,7 @@
   "name": "TBM 도우미",
   "short_name": "TBM",
   "description": "현장 안전서류 자동 생성 — 배전설비안전센터",
-  "start_url": "./app_mockup.html",
+  "start_url": "./tbm_standalone.html",
   "display": "standalone",
   "background_color": "#F5F7FA",
   "theme_color": "#1A6FBF",
