@@ -2458,9 +2458,30 @@ const sketchImages = {
 
 JSON만 출력하고 다른 설명은 쓰지 마세요.`;
 
+    // 사용 가능한 모델 중 vision 지원 첫 번째 선택
+    const MODEL_CANDIDATES = [
+      'gemini-2.0-flash',
+      'gemini-2.0-flash-exp',
+      'gemini-1.5-flash',
+      'gemini-1.5-flash-latest',
+      'gemini-1.5-pro',
+    ];
+    let chosenModel = null;
+    try {
+      const listResp = await fetch(
+        'https://generativelanguage.googleapis.com/v1beta/models?key=' + apiKey
+      );
+      if (listResp.ok) {
+        const listData = await listResp.json();
+        const available = (listData.models || []).map(m => m.name.replace('models/', ''));
+        chosenModel = MODEL_CANDIDATES.find(m => available.includes(m)) || null;
+      }
+    } catch(_) {}
+    if (!chosenModel) chosenModel = 'gemini-1.5-flash';
+
     try {
       const resp = await fetch(
-        'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=' + apiKey,
+        'https://generativelanguage.googleapis.com/v1beta/models/' + chosenModel + ':generateContent?key=' + apiKey,
         {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
@@ -2479,7 +2500,7 @@ JSON만 출력하고 다른 설명은 쓰지 마세요.`;
       if (!resp.ok) {
         const errText = await resp.text();
         const shortErr = errText.slice(0, 120);
-        throw new Error('HTTP ' + resp.status + ': ' + shortErr);
+        throw new Error('HTTP ' + resp.status + ' (' + chosenModel + '): ' + shortErr);
       }
 
       const data = await resp.json();
