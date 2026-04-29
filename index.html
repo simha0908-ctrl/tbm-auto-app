@@ -564,6 +564,18 @@
   }
   .input-field:focus { border-color: var(--primary); }
 </style>
+<!-- 배경 이미지 base64 (작업계획도 / TBM / 체크리스트) -->
+<script src="page9_base.js"></script>
+<script src="tbm_base.js"></script>
+<script src="cl_p1_base.js"></script>
+<script src="cl_p2_base.js"></script>
+<script src="cl_p3_base.js"></script>
+<script src="cl_p4_base.js"></script>
+<script src="cl_p5_base.js"></script>
+<script src="cl_p6_base.js"></script>
+<script src="cl_p7_base.js"></script>
+<script src="cl_p8_base.js"></script>
+<script src="cl_p9_base.js"></script>
 </head>
 <body>
 <div class="phone">
@@ -638,68 +650,6 @@
   </div>
 
   <!-- ══════════════ S0-2: 온보딩 API Key 설정 ══════════════ -->
-  <div class="screen" id="s-onboard-apikey" style="background:linear-gradient(160deg,#1A6FBF 0%,#0A4F8C 100%); min-height:100vh; justify-content:space-between;">
-
-    <!-- 상단 -->
-    <div style="padding:56px 32px 0; text-align:center;">
-      <div style="width:88px; height:88px; background:rgba(255,255,255,0.15); border-radius:24px; margin:0 auto 20px; display:flex; align-items:center; justify-content:center;">
-        <span style="font-size:44px; line-height:1;">🔑</span>
-      </div>
-      <div style="color:rgba(255,255,255,0.7); font-size:13px; font-weight:600; letter-spacing:1px; margin-bottom:8px;">마지막 단계</div>
-      <div style="color:white; font-size:26px; font-weight:900; line-height:1.2; margin-bottom:12px;">AI 분석 키 설정</div>
-      <div style="color:rgba(255,255,255,0.8); font-size:14px; line-height:1.7;">
-        작업계획서를 자동으로 읽으려면<br>Google Gemini API Key가 필요합니다<br>
-        <span style="font-size:12px; color:rgba(255,255,255,0.55);">키는 기기에만 저장되며 외부로 전송되지 않습니다</span>
-      </div>
-    </div>
-
-    <!-- 중단: 입력 폼 -->
-    <div style="padding:0 24px;">
-      <div style="background:rgba(255,255,255,0.12); border-radius:20px; padding:24px 20px; display:flex; flex-direction:column; gap:14px;">
-
-        <div style="color:rgba(255,255,255,0.6); font-size:12px; font-weight:700; letter-spacing:0.5px;">API KEY 입력</div>
-        <input id="onboard-apikey-input" type="password"
-          placeholder="AIzaSy..."
-          style="width:100%; padding:14px 16px; border-radius:12px; border:none; font-size:14px; font-family:inherit; background:rgba(255,255,255,0.95); color:#111; outline:none;"
-          oninput="document.getElementById('onboard-apikey-preview').textContent = this.value ? this.value.slice(0,8)+'...' : ''"
-        >
-        <div id="onboard-apikey-preview" style="color:rgba(255,255,255,0.5); font-size:12px; min-height:16px;"></div>
-
-        <div style="background:rgba(255,255,255,0.08); border-radius:10px; padding:12px 14px; display:flex; align-items:flex-start; gap:10px;">
-          <span style="font-size:16px;">💡</span>
-          <div style="color:rgba(255,255,255,0.7); font-size:12px; line-height:1.6;">
-            <b style="color:rgba(255,255,255,0.9);">키를 어디서 받나요?</b><br>
-            aistudio.google.com 에서 발급 (무료)<br>팀 공용 키는 팀장에게 문의하세요
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- 하단 버튼 -->
-    <div style="padding:0 24px 48px; display:flex; flex-direction:column; gap:10px;">
-
-      <button onclick="finishApiKeyOnboard()" style="
-        width:100%; padding:18px;
-        background:white; border:none; border-radius:16px;
-        font-size:16px; font-weight:800; color:#1A6FBF;
-        cursor:pointer; letter-spacing:0.3px;
-      ">설정 완료 → 시작하기</button>
-
-      <button onclick="skipApiKeyOnboard()" style="
-        width:100%; padding:14px;
-        background:transparent; border:1px solid rgba(255,255,255,0.3); border-radius:16px;
-        font-size:14px; font-weight:600; color:rgba(255,255,255,0.7);
-        cursor:pointer;
-      ">나중에 설정하기</button>
-
-      <div style="text-align:center; margin-top:4px; color:rgba(255,255,255,0.4); font-size:11px;">
-        나중에 설정 → 우측 상단 메뉴 → Vision AI 설정
-      </div>
-    </div>
-
-  </div>
-
   <!-- ══════════════ S1: 메인 ══════════════ -->
   <div class="screen active" id="s-main">
     <div class="main-top">
@@ -779,22 +729,12 @@
 
     <div class="bottom-bar">
       <button class="btn-primary" id="btn-start-analyze" onclick="startAnalyze()" style="display:none;">
-        AI 분석 시작 →
+        입력 화면으로 →
       </button>
     </div>
   </div>
 
-  <!-- ══════════════ S3: 분석 중 ══════════════ -->
-  <div class="screen" id="s-analyzing">
-    <div class="header">
-      <div class="header-title">분석 중</div>
-    </div>
-    <div class="analyzing">
-      <div class="spinner"></div>
-      <div class="analyzing-text">서류를 분석하고 있습니다</div>
-      <div class="analyzing-sub">작업장소·날짜·시간·작업자·<br>차량번호를 읽어옵니다</div>
-    </div>
-  </div>
+  <!-- S3: 분석 중 화면 제거됨 (수기 입력 방식으로 변경) -->
 
   <!-- ══════════════ S4: 추출 확인 ══════════════ -->
   <div class="screen" id="s-confirm">
@@ -810,29 +750,59 @@
       <div class="progress-track"><div class="progress-fill" style="width:14%"></div></div>
     </div>
     <div class="body">
-      <div class="section-title">내용이 맞나요?</div>
-      <div class="section-sub">틀린 항목이 있으면 재촬영하세요</div>
+      <div class="section-title">내용 확인 · 수정</div>
+      <div class="section-sub">AI가 채운 값을 확인하고 틀린 항목은 직접 수정하세요</div>
       <div class="result-card">
-        <div class="result-row">
+
+        <div class="result-row" style="flex-direction:column;gap:4px;">
           <div class="result-label">작업장소</div>
-          <div class="result-value">경기 수원시 팔달구 인계동 123</div>
+          <input id="cf-location" type="text" placeholder="예) 경기 수원시 팔달구 인계동 123"
+            style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;outline:none;"
+            oninput="sessionData.location=this.value">
         </div>
-        <div class="result-row">
-          <div class="result-label">날짜</div>
-          <div class="result-value">2026년 4월 27일</div>
+
+        <div class="result-row" style="gap:8px;">
+          <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+            <div class="result-label">날짜</div>
+            <input id="cf-date" type="date"
+              style="width:100%;padding:10px 8px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;outline:none;"
+              oninput="sessionData.date=this.value">
+          </div>
         </div>
-        <div class="result-row">
-          <div class="result-label">시간</div>
-          <div class="result-value">08:00 ~ 17:00</div>
+
+        <div class="result-row" style="gap:8px;">
+          <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+            <div class="result-label">시작시간</div>
+            <input id="cf-time-start" type="time"
+              style="width:100%;padding:10px 8px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;outline:none;"
+              oninput="sessionData.time_start=this.value">
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+            <div class="result-label">종료시간</div>
+            <input id="cf-time-end" type="time"
+              style="width:100%;padding:10px 8px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;outline:none;"
+              oninput="sessionData.time_end=this.value">
+          </div>
         </div>
-        <div class="result-row">
-          <div class="result-label">차량번호</div>
-          <div class="result-value">경기 86가 1200</div>
+
+        <div class="result-row" style="gap:8px;">
+          <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+            <div class="result-label">차량번호</div>
+            <input id="cf-vehicle-num" type="text" placeholder="예) 경기12가3456"
+              style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;outline:none;"
+              oninput="sessionData.vehicle_num=this.value">
+          </div>
+          <div style="flex:0 0 90px;display:flex;flex-direction:column;gap:4px;">
+            <div class="result-label">차량종류</div>
+            <select id="cf-vehicle-type"
+              style="width:100%;padding:10px 8px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;outline:none;background:white;"
+              onchange="selectedVehicleType=this.value">
+              <option value="활선">활선</option>
+              <option value="저압">저압</option>
+            </select>
+          </div>
         </div>
-        <div class="result-row">
-          <div class="result-label">차량종류</div>
-          <div class="result-value">활선 <span class="tag">연동</span></div>
-        </div>
+
         <div class="result-row" style="flex-direction:column;align-items:stretch;gap:8px;">
           <div style="display:flex;justify-content:space-between;align-items:center;">
             <div class="result-label" style="padding-top:0;">작업자</div>
@@ -846,10 +816,11 @@
             + 작업자 추가
           </button>
         </div>
+
       </div>
     </div>
     <div class="bottom-bar">
-      <button class="btn-primary" onclick="checkAndRegisterSigs()">맞습니다 →</button>
+      <button class="btn-primary" onclick="checkAndRegisterSigs()">다음 →</button>
       <button class="btn-danger" onclick="go('s-camera')">🔄 다시 촬영</button>
     </div>
   </div>
@@ -1483,21 +1454,7 @@
         </div>
       </div>
 
-      <!-- Vision API Key 설정 섹션 -->
-      <div style="font-size:12px; font-weight:700; color:var(--text-muted); letter-spacing:0.5px; margin-bottom:10px; margin-top:4px;">Vision AI 설정</div>
-      <div style="background:var(--white); border-radius:var(--radius); box-shadow:var(--shadow); padding:16px 20px; margin-bottom:20px;">
-        <div style="font-size:13px; font-weight:600; margin-bottom:8px;">Google Gemini API Key</div>
-        <div style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">작업계획서 자동 분석에 사용됩니다. 한 번만 입력하면 됩니다.</div>
-        <input id="api-key-input" type="password"
-          placeholder="AIzaSy..."
-          style="width:100%; padding:12px 14px; border:1.5px solid var(--border); border-radius:10px; font-size:13px; font-family:monospace; outline:none; margin-bottom:10px;"
-          autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-        <div style="display:flex; gap:8px;">
-          <button onclick="saveApiKey()" style="flex:1; padding:11px; background:var(--primary); border:none; border-radius:10px; color:white; font-size:13px; font-weight:700; cursor:pointer;">저장</button>
-          <button onclick="toggleApiKeyVisibility()" style="padding:11px 16px; background:var(--primary-light); border:none; border-radius:10px; color:var(--primary); font-size:13px; font-weight:600; cursor:pointer;" id="api-eye-btn">표시</button>
-        </div>
-        <div id="api-key-status" style="font-size:12px; color:var(--success); margin-top:8px; display:none;">✅ API Key 저장됨</div>
-      </div>
+      <!-- Vision AI 설정 섹션 제거됨 (수기 입력 방식으로 변경) -->
 
       <!-- 앱 정보 섹션 -->
       <div style="font-size:12px; font-weight:700; color:var(--text-muted); letter-spacing:0.5px; margin-bottom:10px;">앱 정보</div>
@@ -1996,6 +1953,12 @@ const sketchImages = {
     go('s-outrigger');
   }
 
+  function selectOut(el) {
+    document.querySelectorAll('#out-grid .out-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedOutKey = el.getAttribute('data-out-key');
+  }
+
   function goFromOutrigger() {
     if (!selectedOutKey) {
       showToast('⚠️ 아웃트리거 방법을 선택해주세요');
@@ -2388,7 +2351,8 @@ const sketchImages = {
       showToast('⚠️ 사진을 먼저 선택해주세요');
       return;
     }
-    go('s-analyzing');
+    // AI 분석 없이 바로 수기 입력 화면으로
+    go('s-confirm');
   }
 
   // ══════════════════════════════════════════════
@@ -2485,19 +2449,26 @@ JSON만 출력하고 다른 설명은 쓰지 마세요.`;
     for (const model of modelQueue) {
       chosenModel = model;
       await new Promise(res => setTimeout(res, 500)); // 모델간 간격
-      const r = await fetch(
-        'https://generativelanguage.googleapis.com/v1beta/models/' + model + ':generateContent?key=' + apiKey,
-        { method: 'POST', headers: { 'content-type': 'application/json' }, body: makeBody() }
-      );
-      if (r.status === 429) {
-        showToast('⏳ ' + model + ' 한도 → 다음 모델 시도...');
-        continue; // 다음 모델로
+      let r;
+      try {
+        r = await fetch(
+          'https://generativelanguage.googleapis.com/v1beta/models/' + model + ':generateContent?key=' + apiKey,
+          { method: 'POST', headers: { 'content-type': 'application/json' }, body: makeBody() }
+        );
+      } catch(_) { continue; }
+      if (r.status === 429 || r.status === 404) {
+        showToast('⏳ ' + model + '(' + r.status + ') → 다음 모델 시도...');
+        continue;
       }
       resp = r;
       break;
     }
 
-    if (!resp) throw new Error('모든 모델 한도 초과 — 잠시 후 재시도해주세요');
+    if (!resp) {
+      showToast('⚠️ 모든 모델 한도 초과 — 직접 입력해주세요');
+      go('s-confirm');
+      return;
+    }
 
     try {
       if (!resp.ok) {
@@ -2567,30 +2538,10 @@ JSON만 출력하고 다른 설명은 쓰지 마세요.`;
   }
 
   function finishOnboard() {
-    // API Key 미설정이면 → API Key 설정 단계로
-    const existingKey = localStorage.getItem('gemini_api_key');
-    if (!existingKey) {
-      go('s-onboard-apikey');
-      return;
-    }
     localStorage.setItem('tbm_onboard_done', '1');
     go('s-main');
   }
 
-  function finishApiKeyOnboard() {
-    const keyInput = document.getElementById('onboard-apikey-input');
-    const key = keyInput ? keyInput.value.trim() : '';
-    if (key) {
-      localStorage.setItem('gemini_api_key', key);
-    }
-    localStorage.setItem('tbm_onboard_done', '1');
-    go('s-main');
-  }
-
-  function skipApiKeyOnboard() {
-    localStorage.setItem('tbm_onboard_done', '1');
-    go('s-main');
-  }
 
   async function sharApp() {
     if (navigator.share) {
@@ -2695,6 +2646,20 @@ JSON만 출력하고 다른 설명은 쓰지 마세요.`;
       runVisionAnalysis();  // 실제 Vision API 호출
     }
     if (id === 's-confirm') {
+      // 입력 필드에 sessionData 값 채우기
+      const cfLoc  = document.getElementById('cf-location');
+      const cfDate = document.getElementById('cf-date');
+      const cfTs   = document.getElementById('cf-time-start');
+      const cfTe   = document.getElementById('cf-time-end');
+      const cfVnum = document.getElementById('cf-vehicle-num');
+      const cfVtyp = document.getElementById('cf-vehicle-type');
+      if (cfLoc)  cfLoc.value  = sessionData.location   || '';
+      if (cfDate) cfDate.value = sessionData.date        || getTodayStr();
+      if (cfTs)   cfTs.value   = sessionData.time_start  || '08:00';
+      if (cfTe)   cfTe.value   = sessionData.time_end    || '17:00';
+      if (cfVnum) cfVnum.value = sessionData.vehicle_num || '';
+      if (cfVtyp) cfVtyp.value = selectedVehicleType     || '활선';
+
       // 1순위: localStorage에 저장된 마지막 작업자 목록 복원
       let restored = null;
       try {
@@ -2705,7 +2670,6 @@ JSON만 출력하고 다른 설명은 쓰지 마세요.`;
       if (restored && restored.length > 0) {
         confirmWorkers = restored;
       } else {
-        // fallback: sessionData (브라우저 재시작 전 값)
         const defaultRoles = ['작업지휘자','유도수','신호수','기타'];
         confirmWorkers = [];
         ['worker1_name','worker2_name','worker3_name','worker4_name'].forEach(function(key, idx) {
@@ -3284,6 +3248,7 @@ JSON만 출력하고 다른 설명은 쓰지 마세요.`;
     저압: { maxLoad: '150kg', hRadius: '10m', vRadius: '10m' },
   };
   let selectedVehicleType = '활선';  // OCR 결과로 설정됨 (기본값: 활선)
+  let selectedOutKey = null;         // 아웃트리거 인출량 선택값
 
   function updateOutBanner() {
     const spec = VEHICLE_SPECS[selectedVehicleType] || VEHICLE_SPECS['활선'];
@@ -3489,9 +3454,803 @@ JSON만 출력하고 다른 설명은 쓰지 마세요.`;
     'D08': 8,  // p9 (체크리스트07,08.pdf p2 — 접지측정)
   };
 
-  // ══════════
+  // ══════════════════════════════════════════════
+  // ══════════════════════════════════════════════
+  // 작업 이력 관리 (localStorage: tbm_workHistory)
+  // ══════════════════════════════════════════════
+  function getTodayStr() {
+    const now = new Date();
+    return now.getFullYear() + '.' +
+      String(now.getMonth() + 1).padStart(2, '0') + '.' +
+      String(now.getDate()).padStart(2, '0');
+  }
 
-  initOnboard();
+  function addToHistory(type) {
+    // type: 'new' | 'add'
+    const now  = new Date();
+    const time = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+    const entry = {
+      type:     type,
+      date:     getTodayStr(),
+      time:     time,
+      location: sessionData.location || '',
+      gongCode: selectedGong.code || '',
+      gongName: selectedGong.name || '',
+    };
+    let history = [];
+    try {
+      const saved = localStorage.getItem('tbm_workHistory');
+      if (saved) history = JSON.parse(saved);
+    } catch(e) {}
+    history.push(entry);
+    try {
+      localStorage.setItem('tbm_workHistory', JSON.stringify(history));
+    } catch(e) {}
+  }
+
+  function renderHistory() {
+    const listEl  = document.getElementById('history-list');
+    const countEl = document.getElementById('history-count');
+    if (!listEl) return;
+
+    let history = [];
+    try {
+      const saved = localStorage.getItem('tbm_workHistory');
+      if (saved) history = JSON.parse(saved);
+    } catch(e) {}
+
+    // 오늘 날짜 항목만 필터
+    const today   = getTodayStr();
+    const todayList = history.filter(h => h.date === today);
+
+    if (countEl) countEl.textContent = todayList.length + '건';
+
+    if (todayList.length === 0) {
+      listEl.innerHTML =
+        '<div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;text-align:center;color:var(--text-muted);font-size:13px;">오늘 완료된 작업이 없습니다</div>';
+      return;
+    }
+
+    let html = '<div style="position:relative;padding-left:36px;">';
+    // 세로 선
+    html += '<div style="position:absolute;left:12px;top:12px;bottom:12px;width:2px;background:var(--border);"></div>';
+
+    todayList.forEach((h, i) => {
+      const isNew  = h.type === 'new';
+      const color  = isNew ? 'var(--primary)' : '#1B8A4E';
+      const label  = isNew ? '신규' : '추가';
+      const isLast = i === todayList.length - 1;
+      html +=
+        '<div style="position:relative;' + (isLast ? '' : 'margin-bottom:20px;') + '">' +
+          '<div style="position:absolute;left:-30px;top:10px;width:16px;height:16px;border-radius:50%;background:' + color + ';border:3px solid white;box-shadow:0 0 0 2px ' + color + ';"></div>' +
+          '<div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px;">' +
+            '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">' +
+              '<div style="display:flex;align-items:center;gap:8px;">' +
+                '<span style="background:' + color + ';color:white;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;">' + label + '</span>' +
+                '<span style="font-size:12px;color:var(--text-muted);font-weight:600;">' + h.time + '</span>' +
+              '</div>' +
+            '</div>' +
+            '<div style="font-size:14px;font-weight:700;margin-bottom:2px;">' + (h.location || '-') + '</div>' +
+            '<div style="font-size:12px;color:var(--text-muted);">' + h.gongCode + ' · ' + h.gongName + '</div>' +
+          '</div>' +
+        '</div>';
+    });
+
+    html += '</div>';
+    listEl.innerHTML = html;
+  }
+
+  // ══════════════════════════════════════════════
+  // 미리보기 카드 실데이터 채우기
+  // ══════════════════════════════════════════════
+  function renderPreview() {
+    // ── 작업계획서 카드 ──
+    const workers = confirmWorkers.map(w => w.name).filter(Boolean).join(' / ') || '-';
+    const vtype   = (typeof selectedVehicleType !== 'undefined' ? selectedVehicleType : null) || '활선';
+    document.getElementById('pv-plan').innerHTML =
+      '<div>📍 ' + (sessionData.location || '-') + '</div>' +
+      '<div>📅 ' + (sessionData.date || '-') + '</div>' +
+      '<div>🕗 ' + (sessionData.time_start || '08:00') + ' ~ ' + (sessionData.time_end || '17:00') + '</div>' +
+      '<div>🚛 ' + (sessionData.vehicle_num || '-') + ' (' + vtype + ')</div>' +
+      '<div style="margin-top:3px;">👤 ' + workers + '</div>';
+
+    // ── 체크리스트 카드 ──
+    const gongLabel = selectedGong.code + ' ' + selectedGong.name;
+    document.getElementById('pv-cl-title').textContent = '체크리스트 ' + selectedGong.code;
+    const clData = (typeof checklistData !== 'undefined' && checklistData[selectedGong.code]) || [];
+    const clItems = clData.flatMap(s => s.items).slice(0, 5);
+    document.getElementById('pv-cl').innerHTML =
+      '<div style="color:#1B8A4E;font-weight:700;margin-bottom:3px;">' + gongLabel + '</div>' +
+      (clItems.length > 0
+        ? clItems.map(i => '<div>☑ ' + i + '</div>').join('')
+        : '<div style="color:#999;">전체 ✓ 자동 체크</div>');
+
+    // ── TBM 카드 ──
+    const riskLines = selectedRisks.length > 0
+      ? selectedRisks.map((r, i) =>
+          '<div>' + (i === 0 ? '🔴' : '🟠') + ' ' + r.hazard + '</div>'
+        ).join('')
+      : '<div style="color:#999;">위험요인 미선택</div>';
+    const daily1 = selectedRisks[0] ? selectedRisks[0].hazard : '-';
+    document.getElementById('pv-tbm').innerHTML =
+      riskLines +
+      '<div style="margin-top:4px;color:#555;">📋 일일중점: ' + daily1 + '</div>';
+
+    // ── 작업계획도 카드 ──
+    const sketchLabels = ['① 다차로 도로','② 편도 1차선','③ 이면도로','④ 농지·산간','⑤ 농지·산간 2','⑥ 기타'];
+    const sketchLabel  = selectedSketchIdx >= 0 ? sketchLabels[selectedSketchIdx] : '미선택';
+    const outLabels    = { max:'최대', mid2:'중간2', mid1:'중간1', min:'최소' };
+    const outLabel     = selectedOutKey ? (outLabels[selectedOutKey] || selectedOutKey) : '미선택';
+    document.getElementById('pv-wp').innerHTML =
+      '<div>🛣️ ' + sketchLabel + '</div>' +
+      '<div>🚛 아웃트리거: ' + outLabel + '</div>' +
+      '<div style="margin-top:3px;color:#888;font-size:7px;">■작업차 ★지휘자 ▲유도자</div>';
+
+    // ── 파일명 ──
+    const dateStr = (sessionData.date || '').replace(/[.\-\/]/g, '');
+    const locStr  = (sessionData.location || '').replace(/\s/g, '').slice(0, 8);
+    document.getElementById('pv-filename').textContent =
+      (locStr || '작업장소') + '_' + (dateStr || 'YYYYMMDD') + '.jpg';
+  }
+
+  // 합본 저장
+  // ══════════════════════════════════════════════
+  function setSaveProgress(msg) {
+    const el = document.getElementById('save-progress');
+    if (!el) return;
+    el.style.display = msg ? 'block' : 'none';
+    el.textContent = msg;
+  }
+
+  function downloadCanvas(canvas, filename) {
+    const a = document.createElement('a');
+    a.href = canvas.toDataURL('image/jpeg', 0.92);
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
+  async function saveAllDocs() {
+    const btn = document.getElementById('btn-save-all');
+    if (btn) { btn.textContent = '생성 중...'; btn.disabled = true; }
+    setSaveProgress('⏳ 준비 중...');
+
+    try {
+      const dateStr = (sessionData.date || '20260427').replace(/[.\-\/]/g, '');
+      const locStr  = (sessionData.location || '').replace(/\s/g,'').slice(0, 8);
+      const prefix  = locStr + '_' + dateStr;
+
+      const results = [];  // { label, filename, canvas }
+
+      // ── 1. 작업계획도 ──
+      setSaveProgress('⏳ 작업계획도 생성 중... (1/3)');
+      try {
+        const c = await generateWorkplanCanvas();
+        results.push({ label:'작업계획도', filename:`작업계획도_${prefix}.jpg`, canvas:c, ok:true });
+      } catch(e) {
+        results.push({ label:'작업계획도', filename:'', canvas:null, ok:false, err:e.message });
+      }
+
+      // ── 2. TBM 회의록 ──
+      setSaveProgress('⏳ TBM 회의록 생성 중... (2/3)');
+      try {
+        const c = await generateTBMCanvas();
+        results.push({ label:'TBM 회의록', filename:`TBM_${prefix}.jpg`, canvas:c, ok:true });
+      } catch(e) {
+        results.push({ label:'TBM 회의록', filename:'', canvas:null, ok:false, err:e.message });
+      }
+
+      // ── 3. 체크리스트 ──
+      setSaveProgress('⏳ 체크리스트 생성 중... (3/3)');
+      try {
+        const gongIdx = GONG_CODE_TO_CL_IDX[selectedGong.code] ?? 0;
+        const c = await generateChecklistCanvas(gongIdx);
+        results.push({ label:`체크리스트(${selectedGong.code})`, filename:`체크리스트_${selectedGong.code}_${prefix}.jpg`, canvas:c, ok:true });
+      } catch(e) {
+        results.push({ label:'체크리스트', filename:'', canvas:null, ok:false, err:e.message });
+      }
+
+      // ── 합본 캔버스 생성 (2×2) ──
+      setSaveProgress('⏳ 합본 이미지 생성 중...');
+      const CW = 827, CH = 1169;  // 개별 캔버스 크기 (SCALE=0.5 기준)
+      const combined = document.createElement('canvas');
+      combined.width  = CW * 2;
+      combined.height = CH * 2;
+      const cctx = combined.getContext('2d');
+      cctx.fillStyle = '#ffffff';
+      cctx.fillRect(0, 0, combined.width, combined.height);
+
+      // 좌상단: 작업계획서 촬영본 (없으면 플레이스홀더)
+      if (window._capturedImageDataUrl) {
+        await new Promise((resolve) => {
+          const img = new Image();
+          img.onload = function() {
+            // 이미지를 CW×CH 영역에 맞게 그리기 (cover 방식)
+            const iw = img.naturalWidth, ih = img.naturalHeight;
+            const scale = Math.max(CW / iw, CH / ih);
+            const dw = iw * scale, dh = ih * scale;
+            const dx = (CW - dw) / 2, dy = (CH - dh) / 2;
+            cctx.save();
+            cctx.beginPath();
+            cctx.rect(0, 0, CW, CH);
+            cctx.clip();
+            cctx.drawImage(img, dx, dy, dw, dh);
+            cctx.restore();
+            resolve();
+          };
+          img.onerror = resolve;
+          img.src = window._capturedImageDataUrl;
+        });
+      } else {
+        // 플레이스홀더 (Vision 연동 전 or 카메라 없을 때)
+        cctx.fillStyle = '#f0f4f8';
+        cctx.fillRect(0, 0, CW, CH);
+        cctx.fillStyle = '#1A6FBF';
+        cctx.font = 'bold 28px sans-serif';
+        cctx.textAlign = 'center';
+        cctx.fillText('작업계획서', CW / 2, CH / 2 - 40);
+        cctx.fillStyle = '#555';
+        cctx.font = '22px sans-serif';
+        cctx.fillText(sessionData.location || '', CW / 2, CH / 2 + 10);
+        cctx.fillText(sessionData.date || '', CW / 2, CH / 2 + 50);
+        cctx.textAlign = 'left';
+      }
+
+      // 우상단: 체크리스트
+      const clResult = results.find(r => r.label.startsWith('체크리스트'));
+      if (clResult && clResult.ok && clResult.canvas) {
+        cctx.drawImage(clResult.canvas, CW, 0, CW, CH);
+      }
+
+      // 좌하단: TBM 회의록
+      const tbmResult = results.find(r => r.label === 'TBM 회의록');
+      if (tbmResult && tbmResult.ok && tbmResult.canvas) {
+        cctx.drawImage(tbmResult.canvas, 0, CH, CW, CH);
+      }
+
+      // 우하단: 작업계획도
+      const wpResult = results.find(r => r.label === '작업계획도');
+      if (wpResult && wpResult.ok && wpResult.canvas) {
+        cctx.drawImage(wpResult.canvas, CW, CH, CW, CH);
+      }
+
+      // 경계선 (얇은 구분선)
+      cctx.strokeStyle = '#cccccc';
+      cctx.lineWidth   = 2;
+      cctx.beginPath();
+      cctx.moveTo(CW, 0); cctx.lineTo(CW, CH * 2);  // 세로 중앙선
+      cctx.moveTo(0, CH); cctx.lineTo(CW * 2, CH);  // 가로 중앙선
+      cctx.stroke();
+
+      // ── 합본 다운로드 ──
+      setSaveProgress('⏳ 저장 중...');
+      await new Promise(res => setTimeout(res, 150));
+      downloadCanvas(combined, `${prefix}.jpg`);
+
+      // ── 완료 화면 업데이트 ──
+      const doneSubEl   = document.getElementById('done-sub');
+      const doneListEl  = document.getElementById('done-filelist');
+      const okCount     = results.filter(r => r.ok).length;
+      if (doneSubEl)  doneSubEl.textContent = '합본 서류 저장 완료';
+      if (doneListEl) doneListEl.innerHTML =
+        `<div style="padding:12px 16px; margin:4px 0; background:#E8F5E9;
+              border-radius:8px; font-size:13px; display:flex; align-items:center; gap:8px;">
+          <span>✅</span>
+          <div>
+            <div style="font-weight:700;">합본 JPG (2×2)</div>
+            <div style="color:#555; font-size:11px; margin-top:2px;">${prefix}.jpg</div>
+            <div style="color:#777; font-size:11px;">작업계획서 + 체크리스트 + TBM + 작업계획도</div>
+          </div>
+        </div>` +
+        results.filter(r => !r.ok).map(r =>
+          `<div style="padding:8px 12px; margin:4px 0; background:#FDECEA;
+                border-radius:8px; font-size:13px; display:flex; align-items:center; gap:8px;">
+            <span>❌</span>
+            <span style="font-weight:600;">${r.label}</span>
+            <span style="color:#d32f2f; font-size:11px;">${r.err||'실패'}</span>
+          </div>`
+        ).join('');
+
+      // ── 이력 기록 ──
+      addToHistory(mode);
+
+      setSaveProgress('');
+      go('s-done');
+
+    } catch(e) {
+      alert('저장 실패: ' + e.message);
+      setSaveProgress('');
+    } finally {
+      if (btn) { btn.textContent = '앨범에 저장 →'; btn.disabled = false; }
+    }
+  }
+
+
+  // ── c6 스케치 위치 (200dpi 기준 확정값) ──
+  // 절대좌표: x=830, y=1180, w=660, h=200
+  var c6Adj = { x: -170, y: 40, w: 660, h: 200 };
+
+  // ── 자유 배치 SVG → Canvas 변환 (c6용) ──
+  function captureFreeAsCanvas() {
+    return new Promise(function(resolve) {
+      var bgSvg = document.getElementById('free-bg');
+      var wrap  = document.getElementById('free-canvas');
+      if (!bgSvg || !wrap) { resolve(null); return; }
+
+      var vw = 360, vh = 110;
+      var rect = wrap.getBoundingClientRect();
+      var svgStr  = new XMLSerializer().serializeToString(bgSvg);
+      var svgBlob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
+      var svgUrl  = URL.createObjectURL(svgBlob);
+
+      var img = new Image();
+      img.onload = function() {
+        var c   = document.createElement('canvas');
+        c.width  = vw;
+        c.height = vh;
+        var cx = c.getContext('2d');
+
+        // 배경 SVG
+        cx.drawImage(img, 0, 0, vw, vh);
+        URL.revokeObjectURL(svgUrl);
+
+        // 좌표 스케일 (display px → SVG viewBox px)
+        var scx = rect.width  > 0 ? vw / rect.width  : 1;
+        var scy = rect.height > 0 ? vh / rect.height : 1;
+
+        // ○ 전주
+        freeSyms.circles.forEach(function(p) {
+          cx.beginPath();
+          cx.arc(p.x * scx, p.y * scy, 9 * scx, 0, Math.PI * 2);
+          cx.strokeStyle = '#111'; cx.lineWidth = 2.5; cx.stroke();
+        });
+        // ★ 지휘자
+        if (freeSyms.star) {
+          cx.font = 'bold ' + Math.round(20 * scx) + 'px serif';
+          cx.fillStyle = '#D32F2F';
+          cx.textAlign = 'center'; cx.textBaseline = 'middle';
+          cx.fillText('★', freeSyms.star.x * scx, freeSyms.star.y * scy);
+        }
+        // △ 신호수
+        if (freeSyms.tri) {
+          var p = freeSyms.tri;
+          var tx = p.x * scx, ty = p.y * scy;
+          cx.beginPath();
+          cx.moveTo(tx, ty - 10 * scy);
+          cx.lineTo(tx + 9 * scx, ty + 6 * scy);
+          cx.lineTo(tx - 9 * scx, ty + 6 * scy);
+          cx.closePath();
+          cx.fillStyle = '#1565C0'; cx.fill();
+          cx.strokeStyle = '#003d99'; cx.lineWidth = 1.5; cx.stroke();
+        }
+
+        resolve(c);
+      };
+      img.onerror = function() { resolve(null); };
+      img.src = svgUrl;
+    });
+  }
+
+  // ══════════════════════════════════════════════
+  // 작업계획도 Canvas 합성
+  // ══════════════════════════════════════════════
+  async function generateWorkplanCanvas() {
+    const SCALE = 0.5;          // 200dpi 좌표 → 827×1170 캔버스
+    const W = 827, H = 1170;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = W;
+    canvas.height = H;
+    const ctx = canvas.getContext('2d');
+
+    // ── 좌표 변환 헬퍼 ──
+    const sx = x => x * SCALE;
+    const sy = y => y * SCALE;
+
+    // ── 1. 배경 이미지 ──
+    await new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => { ctx.drawImage(img, 0, 0, W, H); resolve(); };
+      img.onerror = reject;
+      img.src = typeof page9FullBase64 !== 'undefined' ? page9FullBase64 : '';
+    });
+
+    // ── 2. 아웃트리거 커버박스 (최대 아닐 때 배경 체크 숨김) ──
+    if (selectedOutKey && selectedOutKey !== 'max') {
+      const cb = outriggerCoverBox;
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(sx(cb.x), sy(cb.y), cb.w * SCALE, cb.h * SCALE);
+    }
+
+    // ── 체크마크 헬퍼 (200dpi 좌표 기준) ──
+    function drawCheck(cx200, cy200) {
+      const cx = sx(cx200), cy = sy(cy200);
+      ctx.strokeStyle = 'rgba(0,0,0,0.88)';
+      ctx.lineWidth = Math.max(1.5, 5 * SCALE);
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(cx + sx(-12), cy + sy(2));
+      ctx.lineTo(cx + sx(-3),  cy + sy(11));
+      ctx.lineTo(cx + sx(14),  cy + sy(-10));
+      ctx.stroke();
+    }
+
+    // ── 3. 아웃트리거 체크 ──
+    if (selectedOutKey) {
+      const oc = outriggerPDFCoords[selectedOutKey];
+      if (oc) drawCheck(oc.x, oc.y);
+    }
+
+    // ── 4. 지면상태 체크 (항상 평탄+보통) ──
+    drawCheck(groundPDFCoords.flat.x,   groundPDFCoords.flat.y);
+    drawCheck(groundPDFCoords.normal.x, groundPDFCoords.normal.y);
+
+    // ── 텍스트 헬퍼 ──
+    function drawText(text, coord) {
+      if (!text || !coord) return;
+      const fs = Math.round((coord.fontSize || 28) * SCALE);
+      ctx.font = 'bold ' + fs + 'px "Noto Sans KR", "Apple SD Gothic Neo", sans-serif';
+      ctx.fillStyle = '#000000';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'alphabetic';
+      ctx.fillText(String(text), sx(coord.x), sy(coord.y));
+    }
+
+    // ── 5. sessionData 값 ──
+    drawText(sessionData.location     || '', workplanCoords.location);
+    drawText(sessionData.date         || '', workplanCoords.date);
+    drawText(sessionData.time_start   || '', workplanCoords.time_start);
+    drawText(sessionData.time_end     || '', workplanCoords.time_end);
+    drawText(sessionData.vehicle_num  || '', workplanCoords.vehicle_num);
+    drawText(sessionData.worker1_name || '', workplanCoords.worker1_name);
+    drawText(sessionData.worker2_name || '', workplanCoords.worker2_name);
+    drawText(sessionData.worker3_name || '', workplanCoords.worker3_name);
+
+    // ── 6. 차량종류 체크 ──
+    if (selectedVehicleType === '활선') {
+      drawCheck(workplanCoords['vtype_활선'].x, workplanCoords['vtype_활선'].y);
+    } else if (selectedVehicleType === '저압') {
+      drawCheck(workplanCoords['vtype_저압'].x, workplanCoords['vtype_저압'].y);
+    }
+
+    // ── 7. 고정값 ──
+    drawText('배전설비안전센터 직영작업', workplanCoords.work_content);
+
+    // ── 8. 차량종류 연동값 (활선/저압별 하중·반경) ──
+    const spec = VEHICLE_SPECS[selectedVehicleType] || VEHICLE_SPECS['활선'];
+    drawText(spec.maxLoad, workplanCoords.max_load);
+    drawText(spec.hRadius, workplanCoords.h_radius);
+    drawText(spec.vRadius, workplanCoords.v_radius);
+
+    // ── 9. 스케치 카드 심볼 (c1~c5) ──
+    const sketchKeys = ['c1','c2','c3','c4','c5','c6'];
+    sketchKeys.forEach((key, i) => {
+      const pc  = sketchPDFCoords[key];
+      const def = sketchSymbolDefs[key];
+      if (!pc) return;
+
+      // 선택된 카드: 체크박스 체크마크
+      if (selectedSketchIdx === i) {
+        drawCheck(pc.checkbox.x, pc.checkbox.y);
+      }
+
+      // c6은 아래에서 별도 처리
+      if (key === 'c6' || !def) return;
+
+      // 전주 ○
+      if (pc.circle1) {
+        ctx.strokeStyle = '#111111';
+        ctx.lineWidth = Math.max(1, 2.5 * SCALE);
+        ctx.beginPath();
+        ctx.arc(sx(pc.circle1.x), sy(pc.circle1.y), PDF_CIRCLE_R * SCALE, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      // 지휘자 ★
+      if (pc.star) {
+        const fs = Math.round(PDF_STAR_SIZE * SCALE);
+        ctx.font = fs + 'px serif';
+        ctx.fillStyle = '#D32F2F';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('★', sx(pc.star.x), sy(pc.star.y));
+      }
+
+      // 신호수 △
+      if (pc.tri) {
+        const bh = PDF_TRI_H * SCALE;
+        const bw = bh * (18 / 16);
+        const tx = sx(pc.tri.x), ty = sy(pc.tri.y);
+        ctx.fillStyle = '#1565C0';
+        ctx.strokeStyle = '#003d99';
+        ctx.lineWidth = Math.max(1, 1.5 * SCALE);
+        ctx.beginPath();
+        ctx.moveTo(tx,          ty - bh / 2);
+        ctx.lineTo(tx + bw / 2, ty + bh / 2);
+        ctx.lineTo(tx - bw / 2, ty + bh / 2);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+      }
+    });
+
+    // ── 10. c6 자유 배치 스케치 합성 ──
+    if (selectedSketchIdx === 5) {
+      const freeImg = await captureFreeAsCanvas();
+      if (freeImg) {
+        const c6cb = sketchPDFCoords.c6.checkbox;
+        const destX = sx(c6cb.x + PDF_CHECK_W2 + 20 + c6Adj.x);
+        const destY = sy(c6cb.y + c6Adj.y);
+        const destW = sx(c6Adj.w);
+        const destH = sy(c6Adj.h);
+        ctx.drawImage(freeImg, destX, destY, destW, destH);
+      }
+    }
+
+    // ── 11. 서명 이미지 ──
+    const wpSigNames = [sessionData.worker1_name, sessionData.worker2_name, sessionData.worker3_name];
+    for (let i = 0; i < wpSigNames.length; i++) {
+      const sigImg = await getWorkerSigImg(wpSigNames[i]);
+      if (!sigImg) continue;
+      const c = workplanCoords['sig_worker' + (i + 1)];
+      if (c) ctx.drawImage(sigImg, sx(c.x), sy(c.y), sx(c.w), sy(c.h));
+    }
+
+    // 상태 초기화
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    return canvas;
+  }
+
+  // ══════════════════════════════════════════════
+  // TBM 회의록 Canvas 합성
+  // ══════════════════════════════════════════════
+  async function generateTBMCanvas() {
+    const SCALE = 0.5;
+    const W = 827, H = 1169;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = W; canvas.height = H;
+    const ctx = canvas.getContext('2d');
+
+    const sx = x => x * SCALE;
+    const sy = y => y * SCALE;
+
+    // ── 1. 배경 이미지 ──
+    await new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => { ctx.drawImage(img, 0, 0, W, H); resolve(); };
+      img.onerror = reject;
+      img.src = typeof tbmPageBase64 !== 'undefined' ? tbmPageBase64 : '';
+    });
+
+    // ── 텍스트 헬퍼 ──
+    function drawText(text, coord) {
+      if (!text || !coord) return;
+      const fs = Math.round((coord.fontSize || 24) * SCALE);
+      ctx.font = 'bold ' + fs + 'px "Noto Sans KR", "Apple SD Gothic Neo", sans-serif';
+      ctx.fillStyle = '#000000';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'alphabetic';
+      ctx.fillText(String(text), sx(coord.x), sy(coord.y));
+    }
+
+    // ── 체크마크 헬퍼 ──
+    function drawCheck(cx200, cy200) {
+      const cx = sx(cx200), cy = sy(cy200);
+      ctx.strokeStyle = 'rgba(0,0,0,0.88)';
+      ctx.lineWidth = Math.max(1.5, 5 * SCALE);
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(cx + sx(-12), cy + sy(2));
+      ctx.lineTo(cx + sx(-3),  cy + sy(11));
+      ctx.lineTo(cx + sx(14),  cy + sy(-10));
+      ctx.stroke();
+    }
+
+    // ── 2. 기본 정보 (sessionData 기반) ──
+    const workerNames = [
+      sessionData.worker1_name || '',
+      sessionData.worker2_name || '',
+      sessionData.worker3_name || '',
+      sessionData.worker4_name || '',
+    ];
+    const workerCount = workerNames.filter(n => n).length;
+    drawText(sessionData.date + '  08:00~17:00', tbmCoords.date_time);
+    drawText(sessionData.supervisor || '',        tbmCoords.supervisor);
+    drawText(workerCount + '명',                  tbmCoords.worker_count);
+    drawText(sessionData.location || '',          tbmCoords.location);
+
+    // ── 3. 업무분담 (최대 4명) — confirmWorkers 실 역할 사용 ──
+    workerNames.forEach((name, i) => {
+      const n = i + 1;
+      const role = (confirmWorkers[i] && confirmWorkers[i].role) || '';
+      if (name) drawText(name, tbmCoords['worker'+n+'_name']);
+      if (name && role) drawText(role, tbmCoords['worker'+n+'_role']);
+    });
+
+    // ── 4. 위험성평가 (selectedRisks 실데이터, 최대 4행) ──
+    selectedRisks.forEach((r, i) => {
+      const n = i + 1;
+      if (tbmCoords['risk'+n+'_hazard']) drawText(r.hazard,  tbmCoords['risk'+n+'_hazard']);
+      if (tbmCoords['risk'+n+'_action']) drawText(r.action,  tbmCoords['risk'+n+'_action']);
+    });
+
+    // ── 5. 일일중점관리 체크 (1순위 위험요인 → 카테고리 매핑) ──
+    const dailyCategoryMap = {
+      '감전':    'daily_감전',
+      '떨어짐':  'daily_떨어짐',
+      '끼임':    'daily_끼임',
+      '장비깔림':'daily_장비깔림',
+      '질식':    'daily_질식',
+    };
+    // 선택된 모든 위험요인에서 카테고리 키워드 탐색 (1순위만 체크)
+    if (selectedRisks.length > 0) {
+      const first = selectedRisks[0].hazard;
+      let matched = false;
+      Object.entries(dailyCategoryMap).forEach(([keyword, coordKey]) => {
+        if (first.includes(keyword) && tbmCoords[coordKey]) {
+          drawCheck(tbmCoords[coordKey].x, tbmCoords[coordKey].y);
+          matched = true;
+        }
+      });
+      // 해당 카테고리 없으면 기타 체크 + 괄호 안 위험요인명 기입
+      if (!matched && tbmCoords.daily_기타) {
+        drawCheck(tbmCoords.daily_기타.x, tbmCoords.daily_기타.y);
+        if (tbmCoords.daily_기타_text) {
+          drawText(first, tbmCoords.daily_기타_text);
+        }
+      }
+      // 1순위 위험요인·감소대책 텍스트
+      drawText(selectedRisks[0].hazard, tbmCoords.daily_text_hazard);
+      drawText(selectedRisks[0].action, tbmCoords.daily_text_action);
+    }
+
+    // ── 6. 서명란 이름 (sessionData 기반) ──
+    workerNames.forEach((name, i) => {
+      const n = i + 1;
+      if (name && tbmCoords['sig_name'+n]) drawText(name, tbmCoords['sig_name'+n]);
+    });
+
+    // ── 7. 하단 작업책임자 이름 ──
+    drawText(sessionData.supervisor || '', tbmCoords.bot_sup_name);
+
+    // ── 8. 서명 이미지 ──
+    // 상단 작업책임자 서명 (supervisor = worker1)
+    const supSigImg = await getWorkerSigImg(sessionData.supervisor || '');
+    if (supSigImg) {
+      const ct = tbmCoords.top_sup_sig;
+      if (ct) ctx.drawImage(supSigImg, sx(ct.x), sy(ct.y), sx(ct.w), sy(ct.h));
+      const cb = tbmCoords.bot_sup_sig;
+      if (cb) ctx.drawImage(supSigImg, sx(cb.x), sy(cb.y), sx(cb.w), sy(cb.h));
+    }
+    // 작업자 서명 (sig_worker1~4)
+    for (let i = 0; i < workerNames.length; i++) {
+      const sigImg = await getWorkerSigImg(workerNames[i]);
+      if (!sigImg) continue;
+      const c = tbmCoords['sig_worker' + (i + 1)];
+      if (c) ctx.drawImage(sigImg, sx(c.x), sy(c.y), sx(c.w), sy(c.h));
+    }
+
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    return canvas;
+  }
+
+  // ── 미리보기 모달 ──
+  async function previewWorkplan() {
+    const btn = document.getElementById('btn-preview-workplan');
+    if (btn) { btn.textContent = '생성 중...'; btn.disabled = true; }
+    try {
+      const canvas = await generateWorkplanCanvas();
+      const modal  = document.getElementById('workplan-modal');
+      const img    = document.getElementById('workplan-modal-img');
+      img.src      = canvas.toDataURL('image/jpeg', 0.92);
+      modal.style.display = 'flex';
+    } catch(e) {
+      alert('생성 실패: ' + e.message);
+    } finally {
+      if (btn) { btn.textContent = '🖼️ 작업계획도 미리보기'; btn.disabled = false; }
+    }
+  }
+
+  async function downloadWorkplan() {
+    const canvas = await generateWorkplanCanvas();
+    const a = document.createElement('a');
+    a.href     = canvas.toDataURL('image/jpeg', 0.92);
+    a.download = '작업계획도_' + (sessionData.date || 'result') + '.jpg';
+    a.click();
+  }
+
+  // ══════════════════════════════════════════════
+  // 체크리스트 Canvas 합성 (공종 인덱스 0~8)
+  // ══════════════════════════════════════════════
+  async function generateChecklistCanvas(gongIdx) {
+    const SCALE = 0.5;
+    const W = 827, H = 1170;  // 200dpi 기준 절반 (≒96dpi 출력용)
+
+    const canvas = document.createElement('canvas');
+    canvas.width  = W;
+    canvas.height = H;
+    const ctx = canvas.getContext('2d');
+
+    // ── 1. 배경 이미지 로드 ──
+    const base64Fn = CL_PAGE_BASES[gongIdx];
+    const base64   = base64Fn ? base64Fn() : null;
+    if (!base64) throw new Error('체크리스트 배경 이미지 없음 (공종' + (gongIdx+1) + ')');
+
+    await new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload  = () => { ctx.drawImage(img, 0, 0, W, H); resolve(); };
+      img.onerror = () => reject(new Error('배경 이미지 로드 실패'));
+      img.src = base64;
+    });
+
+    // ── 2. 좌표 세트 선택 ──
+    const pageKey = CL_PAGE_KEYS[gongIdx];
+    const coords  = clCoords[pageKey];
+    if (!coords) throw new Error('clCoords.' + pageKey + ' 없음');
+
+    // ── 3. 헬퍼 ──
+    const sx = v => Math.round(v * SCALE);
+    const sy = v => Math.round(v * SCALE);
+
+    function drawText(text, coord) {
+      if (!text || !coord) return;
+      const fs = sx(coord.fontSize || 40);
+      ctx.font         = `500 ${fs}px 'Noto Sans KR', sans-serif`;
+      ctx.fillStyle    = '#000000';
+      ctx.textBaseline = 'alphabetic';
+      ctx.textAlign    = 'left';
+      ctx.fillText(text, sx(coord.x), sy(coord.y));
+    }
+
+    // ── 4. 고정값 ──
+    drawText('배전설비안전센터',      coords['cl_시공사']);
+    drawText('배전설비안전센터 직영작업', coords['cl_공사명']);
+
+    // ── 5. 일시 (sessionData 기준) ──
+    const today = sessionData.date || '';
+    drawText(today, coords['cl_일시']);
+
+    // ── 6. 확인자 (작업자1 이름) ──
+    const worker1Name = sessionData.worker1_name || '';
+    drawText(worker1Name, coords['cl_확인자']);
+
+    // ── 7. 확인자 서명 (worker1) ──
+    const clSigImg = await getWorkerSigImg(worker1Name);
+    if (clSigImg) {
+      const c = coords['cl_확인자서명'];
+      if (c) ctx.drawImage(clSigImg, sx(c.x), sy(c.y), sx(c.w), sy(c.h));
+    }
+
+    ctx.textAlign    = 'left';
+    ctx.textBaseline = 'alphabetic';
+    return canvas;
+  }
+
+  function selectOut(el) {
+    document.querySelectorAll('#out-grid .out-card').forEach(i => i.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedOutKey = el.getAttribute('data-out-key');
+  }
+
+  // 앱 최초 로드 시
+  renderHistory();
+  initOnboard();  // 첫 방문이면 온보딩 화면으로
+</script>
+
+<!-- 서비스워커 등록 -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('sw.js')
+        .then(function(reg) { console.log('SW 등록 완료:', reg.scope); })
+        .catch(function(err) { console.log('SW 등록 실패:', err); });
+    });
+  }
 </script>
 </body>
 </html>
