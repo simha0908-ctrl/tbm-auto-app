@@ -1537,6 +1537,116 @@
 
 </div>
 
+<!-- ══════════════ 설명서 모달 ══════════════ -->
+<div id="guide-modal" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.55); align-items:flex-end;" onclick="closeGuide(event)">
+  <div id="guide-sheet" style="background:#f0f4f8; border-radius:20px 20px 0 0; width:100%; max-height:90vh; overflow-y:auto; font-family:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','맑은 고딕',sans-serif;">
+
+    <!-- 헤더 -->
+    <div style="background:linear-gradient(135deg,#1A6FBF,#0d4f8c); padding:18px 20px 16px; border-radius:20px 20px 0 0; position:sticky; top:0; z-index:1;">
+      <div style="width:36px; height:4px; background:rgba(255,255,255,0.4); border-radius:2px; margin:0 auto 14px;"></div>
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <div style="color:white; font-size:16px; font-weight:700;">📋 TBM 안전서류 앱</div>
+          <div style="color:rgba(255,255,255,0.75); font-size:12px; margin-top:2px;">설치 및 사용 설명서</div>
+        </div>
+        <button onclick="closeGuideBtn()" style="background:rgba(255,255,255,0.2); border:none; color:white; border-radius:50%; width:30px; height:30px; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center;">✕</button>
+      </div>
+    </div>
+
+    <div style="padding:16px 14px 32px;">
+
+      <!-- 앱 주소 -->
+      <div style="background:white; border-radius:12px; padding:13px 16px; text-align:center; margin-bottom:14px; box-shadow:0 2px 6px rgba(0,0,0,0.07);">
+        <div style="font-size:11px; color:#777; margin-bottom:4px;">📱 앱 주소 (카카오·문자로 공유)</div>
+        <div style="font-size:13px; font-weight:700; color:#1A6FBF; word-break:break-all;">simha0908-ctrl.github.io/tbm-auto-app</div>
+      </div>
+
+      <!-- 아이폰 -->
+      <div style="background:white; border-radius:12px; overflow:hidden; margin-bottom:12px; box-shadow:0 2px 6px rgba(0,0,0,0.07);">
+        <div style="background:#1A6FBF; color:white; padding:10px 16px; font-size:13px; font-weight:700;">🍎 아이폰 설치 방법 <span style="background:#e8f0fe; color:#1A6FBF; border-radius:5px; padding:1px 6px; font-size:11px; font-weight:700; margin-left:4px;">Safari 필수</span></div>
+        <div style="padding:4px 0;">
+          <div style="display:flex; align-items:flex-start; gap:10px; padding:10px 16px; border-bottom:1px solid #f0f0f0;">
+            <div style="min-width:22px; height:22px; background:#1A6FBF; color:white; border-radius:50%; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">1</div>
+            <div style="font-size:13px; line-height:1.5;"><b style="color:#1A6FBF;">Safari</b>로 위 주소 접속<br><span style="font-size:11px; color:#999;">※ 크롬·카카오 브라우저는 설치 안 됨</span></div>
+          </div>
+          <div style="display:flex; align-items:flex-start; gap:10px; padding:10px 16px; border-bottom:1px solid #f0f0f0;">
+            <div style="min-width:22px; height:22px; background:#1A6FBF; color:white; border-radius:50%; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">2</div>
+            <div style="font-size:13px; line-height:1.5;">주소창 오른쪽 <b style="color:#1A6FBF;">⋯ 버튼</b> 탭</div>
+          </div>
+          <div style="display:flex; align-items:flex-start; gap:10px; padding:10px 16px; border-bottom:1px solid #f0f0f0;">
+            <div style="min-width:22px; height:22px; background:#1A6FBF; color:white; border-radius:50%; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">3</div>
+            <div style="font-size:13px; line-height:1.5;"><b style="color:#1A6FBF;">「홈 화면에 추가」</b> 탭</div>
+          </div>
+          <div style="display:flex; align-items:flex-start; gap:10px; padding:10px 16px;">
+            <div style="min-width:22px; height:22px; background:#1A6FBF; color:white; border-radius:50%; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">4</div>
+            <div style="font-size:13px; line-height:1.5;"><b style="color:#1A6FBF;">「추가」</b> 탭 → 홈 화면 아이콘 생성 완료</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 갤럭시 -->
+      <div style="background:white; border-radius:12px; overflow:hidden; margin-bottom:12px; box-shadow:0 2px 6px rgba(0,0,0,0.07);">
+        <div style="background:#2d6a4f; color:white; padding:10px 16px; font-size:13px; font-weight:700;">🤖 갤럭시 설치 방법 <span style="background:#d4edda; color:#2d6a4f; border-radius:5px; padding:1px 6px; font-size:11px; font-weight:700; margin-left:4px;">Chrome 권장</span></div>
+        <div style="padding:4px 0;">
+          <div style="display:flex; align-items:flex-start; gap:10px; padding:10px 16px; border-bottom:1px solid #f0f0f0;">
+            <div style="min-width:22px; height:22px; background:#2d6a4f; color:white; border-radius:50%; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">1</div>
+            <div style="font-size:13px; line-height:1.5;"><b style="color:#2d6a4f;">Chrome</b>으로 위 주소 접속</div>
+          </div>
+          <div style="display:flex; align-items:flex-start; gap:10px; padding:10px 16px; border-bottom:1px solid #f0f0f0;">
+            <div style="min-width:22px; height:22px; background:#2d6a4f; color:white; border-radius:50%; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">2</div>
+            <div style="font-size:13px; line-height:1.5;">주소창 오른쪽 <b style="color:#2d6a4f;">⋮ 메뉴</b> 탭</div>
+          </div>
+          <div style="display:flex; align-items:flex-start; gap:10px; padding:10px 16px; border-bottom:1px solid #f0f0f0;">
+            <div style="min-width:22px; height:22px; background:#2d6a4f; color:white; border-radius:50%; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">3</div>
+            <div style="font-size:13px; line-height:1.5;"><b style="color:#2d6a4f;">「앱 설치」</b> 또는 <b style="color:#2d6a4f;">「홈 화면에 추가」</b> 탭</div>
+          </div>
+          <div style="display:flex; align-items:flex-start; gap:10px; padding:10px 16px;">
+            <div style="min-width:22px; height:22px; background:#2d6a4f; color:white; border-radius:50%; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">4</div>
+            <div style="font-size:13px; line-height:1.5;"><b style="color:#2d6a4f;">「설치」</b> 탭 → 홈 화면 아이콘 생성 완료</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 사용법 -->
+      <div style="background:white; border-radius:12px; overflow:hidden; margin-bottom:12px; box-shadow:0 2px 6px rgba(0,0,0,0.07);">
+        <div style="background:#6b3fa0; color:white; padding:10px 16px; font-size:13px; font-weight:700;">📖 사용 방법</div>
+        <div style="padding:4px 0;">
+          <div style="display:flex; align-items:flex-start; gap:10px; padding:10px 16px; border-bottom:1px solid #f0f0f0;">
+            <div style="min-width:22px; height:22px; background:#6b3fa0; color:white; border-radius:50%; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">1</div>
+            <div style="font-size:13px; line-height:1.5;"><b style="color:#6b3fa0;">작업 모드 선택</b><br>📷 신규 작업 — 오늘 첫 작업<br>➕ 추가 작업 — 같은 날 두 번째부터</div>
+          </div>
+          <div style="display:flex; align-items:flex-start; gap:10px; padding:10px 16px; border-bottom:1px solid #f0f0f0;">
+            <div style="min-width:22px; height:22px; background:#6b3fa0; color:white; border-radius:50%; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">2</div>
+            <div style="font-size:13px; line-height:1.5;"><b style="color:#6b3fa0;">기본 정보 입력</b><br>작업장소 · 차량번호 · 작업자 이름<br><span style="font-size:11px; color:#999;">날짜·시간은 자동 입력</span></div>
+          </div>
+          <div style="display:flex; align-items:flex-start; gap:10px; padding:10px 16px; border-bottom:1px solid #f0f0f0;">
+            <div style="min-width:22px; height:22px; background:#6b3fa0; color:white; border-radius:50%; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">3</div>
+            <div style="font-size:13px; line-height:1.5;"><b style="color:#6b3fa0;">서명 등록</b> — 최초 1회만<br><span style="font-size:11px; color:#999;">이후 자동 적용, 최대 20명 저장</span></div>
+          </div>
+          <div style="display:flex; align-items:flex-start; gap:10px; padding:10px 16px; border-bottom:1px solid #f0f0f0;">
+            <div style="min-width:22px; height:22px; background:#6b3fa0; color:white; border-radius:50%; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">4</div>
+            <div style="font-size:13px; line-height:1.5;"><b style="color:#6b3fa0;">위험성평가 선택</b> — 최대 4개</div>
+          </div>
+          <div style="display:flex; align-items:flex-start; gap:10px; padding:10px 16px; border-bottom:1px solid #f0f0f0;">
+            <div style="min-width:22px; height:22px; background:#6b3fa0; color:white; border-radius:50%; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">5</div>
+            <div style="font-size:13px; line-height:1.5;"><b style="color:#6b3fa0;">작업계획도 선택</b><br>도로 유형 카드 탭 or ⑥ 직접스케치</div>
+          </div>
+          <div style="display:flex; align-items:flex-start; gap:10px; padding:10px 16px;">
+            <div style="min-width:22px; height:22px; background:#6b3fa0; color:white; border-radius:50%; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">6</div>
+            <div style="font-size:13px; line-height:1.5;"><b style="color:#6b3fa0;">저장</b> — 안전서류 4종 합본 이미지 생성<br>📁 갤러리에 자동 저장</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 링크 공유 버튼 -->
+      <button id="guide-share-btn" style="width:100%; background:#1A6FBF; color:white; border:none; border-radius:12px; padding:15px; font-size:15px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+        🔗 앱 링크 공유하기
+      </button>
+
+    </div>
+  </div>
+</div>
+
 <script>
 // TBM 도우미 — 위험성평가·체크리스트 데이터
 // 이 파일만 수정하면 앱 데이터 업데이트 완료
@@ -2497,7 +2607,7 @@ const sketchImages = {
 
     if (isIOS) {
       tip.style.display = 'block';
-      tipText.textContent = '하단 공유버튼(□↑)을 탭한 후 "홈 화면에 추가"를 선택하면 앱 아이콘이 생성됩니다';
+      tipText.textContent = 'Safari 주소창 오른쪽 ⋯ 버튼 탭 → "홈 화면에 추가" 선택하면 앱 아이콘이 생성됩니다';
     } else if (isAndroid) {
       tip.style.display = 'block';
       tipText.textContent = '브라우저 상단 메뉴에서 "앱 설치" 또는 "홈 화면에 추가"를 선택하면 앱 아이콘이 생성됩니다';
@@ -2510,19 +2620,41 @@ const sketchImages = {
   }
 
 
-  async function sharApp() {
+  function sharApp() {
+    var modal = document.getElementById('guide-modal');
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeGuide(e) {
+    if (e.target === document.getElementById('guide-modal')) {
+      closeGuideBtn();
+    }
+  }
+
+  function closeGuideBtn() {
+    document.getElementById('guide-modal').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('guide-share-btn').addEventListener('click', async function() {
     if (navigator.share) {
       try {
         await navigator.share({
           title: 'TBM 도우미',
-          text: 'KEPCO 배전설비안전센터 TBM 도우미 앱입니다.',
-          url: window.location.href
+          text: 'KEPCO 배전설비안전센터 TBM 도우미 앱',
+          url: 'https://simha0908-ctrl.github.io/tbm-auto-app/'
         });
       } catch(e) {}
     } else {
-      alert('이 브라우저에서는 공유 기능을 지원하지 않습니다.');
+      try {
+        await navigator.clipboard.writeText('https://simha0908-ctrl.github.io/tbm-auto-app/');
+        showToast('링크가 복사되었습니다');
+      } catch(e) {
+        showToast('https://simha0908-ctrl.github.io/tbm-auto-app/');
+      }
     }
-  }
+  });
 
   function go(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
