@@ -2083,6 +2083,7 @@ const sketchImages = {
       const endM      = (rounded2 + 180) % 60;
       sessionData.time_end = String(endH).padStart(2, '0') + ':' + String(endM).padStart(2, '0');
     }
+    syncConfirmToSession();  // 작업자 이름을 sessionData에 반영 (sig-check에서 사용)
     setMode('add');
     go('s-risk');
   }
