@@ -3499,10 +3499,12 @@ const sketchImages = {
         + '<input type="text" value="' + (w.name || '') + '" placeholder="이름" data-widx="' + i + '"'
         + ' style="flex:1;min-width:0;padding:8px 10px;border:1.5px solid #e0e0e0;border-radius:8px;font-size:14px;font-family:inherit;"'
         + ' oninput="confirmWorkers[' + i + '].name=this.value">'
-        + '<select data-widx="' + i + '"'
-        + ' style="padding:8px 4px;border:1.5px solid #e0e0e0;border-radius:8px;font-size:12px;background:#fff;font-family:inherit;"'
-        + ' onchange="confirmWorkers[' + i + '].role=this.value">'
-        + roleOpts + '</select>';
+        + (i === 0
+        ? '<div style="padding:8px 6px;border:1.5px solid #c8d8ee;border-radius:8px;font-size:12px;background:#eef4fb;color:#1a6fbf;font-weight:700;white-space:nowrap;">작업지휘자</div>'
+        : '<select data-widx="' + i + '"'
+          + ' style="padding:8px 4px;border:1.5px solid #e0e0e0;border-radius:8px;font-size:12px;background:#fff;font-family:inherit;"'
+          + ' onchange="confirmWorkers[' + i + '].role=this.value">'
+          + roleOpts + '</select>');
       if (i > 0) {
         html += '<button onclick="removeConfirmWorker(' + i + ')"'
           + ' style="width:30px;height:34px;border:none;border-radius:8px;background:#fee;color:#c00;'
