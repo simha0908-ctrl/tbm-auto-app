@@ -2778,7 +2778,7 @@ const sketchImages = {
       if (restored && restored.length > 0) {
         confirmWorkers = restored;
       } else {
-        const defaultRoles = ['작업지휘자','유도수','신호수','기타'];
+        const defaultRoles = ['작업지휘자','유도수','신호수','장비기사','기타'];
         const names = ['worker1_name','worker2_name','worker3_name','worker4_name']
           .map(key => sessionData[key] || '');
         const hasAnyName = names.some(n => n);
@@ -3186,18 +3186,20 @@ const sketchImages = {
   // ── 작업계획도 전체 필드 좌표 (200dpi, 1653×2339px 기준) ──
   const workplanCoords = {
     // ── 비전(OCR) 값
-    location:     { x:1100, y:386,  fontSize:34 },  // 작업장소
-    date:         { x:400,  y:384,  fontSize:34 },  // 작업일자
-    time_start:   { x:634,  y:384,  fontSize:34 },  // 시작시간
-    time_end:     { x:784,  y:386,  fontSize:34 },  // 종료시간
-    vehicle_num:  { x:394,  y:480,  fontSize:34 },  // 차량번호
+    date_yy:      { x: 386, y: 384, fontSize:34 },  // 날짜-년(YY)
+    date_mm:      { x: 462, y: 384, fontSize:34 },  // 날짜-월(MM)
+    date_dd:      { x: 538, y: 384, fontSize:34 },  // 날짜-일(DD)
+    time_start:   { x: 634, y: 384, fontSize:34 },  // 시작시간
+    time_end:     { x: 784, y: 386, fontSize:34 },  // 종료시간
+    location:     { x:1112, y: 386, fontSize:34 },  // 작업장소
+    vehicle_num:  { x: 394, y: 480, fontSize:34 },  // 차량번호
     vtype_활선:   { x:1168, y:444 },                // 차량종류-활선
     vtype_저압:   { x:1280, y:448 },                // 차량종류-저압
-    worker1_name: { x:394,  y:528,  fontSize:34 },  // 작업자1 이름
-    worker2_name: { x:830,  y:528,  fontSize:34 },  // 작업자2 이름
-    worker3_name: { x:1266, y:528,  fontSize:34 },  // 작업자3 이름
+    worker1_name: { x: 394, y: 528, fontSize:34 },  // 작업자1 이름
+    worker2_name: { x: 830, y: 528, fontSize:34 },  // 작업자2 이름
+    worker3_name: { x:1266, y: 528, fontSize:34 },  // 작업자3 이름
     // ── 고정값
-    work_content: { x:394,  y:430,  fontSize:34 },  // 작업내용
+    work_content: { x: 394, y: 430, fontSize:34 },  // 작업내용
     // ── 차량종류 연동값
     max_load:     { x:778,  y:1664, fontSize:34 },  // 작업최대하중
     h_radius:     { x:842,  y:1728, fontSize:34 },  // 작업반경 수평
@@ -3398,7 +3400,7 @@ const sketchImages = {
   // ══════════════════════════════════════════════
   // 추출 확인 화면 — 작업자 수동 편집
   // ══════════════════════════════════════════════
-  const CONFIRM_ROLES = ['작업지휘자', '유도수', '신호수', '기타'];
+  const CONFIRM_ROLES = ['작업지휘자', '유도수', '신호수', '장비기사', '기타'];
 
   let confirmWorkers = [
     { name: '', role: '작업지휘자' },
@@ -4044,7 +4046,11 @@ const sketchImages = {
 
     // ── 5. sessionData 값 ──
     drawText(sessionData.location     || '', workplanCoords.location);
-    drawText(sessionData.date         || '', workplanCoords.date);
+    // 날짜 YY/MM/DD 분리 출력 (예: 2026-05-03 → 26 / 05 / 03)
+    const _dateParts = (sessionData.date || '').replace(/[.\-\/]/g, '-').split('-');
+    drawText((_dateParts[0] || '').slice(-2), workplanCoords.date_yy);
+    drawText(_dateParts[1] || '',              workplanCoords.date_mm);
+    drawText(_dateParts[2] || '',              workplanCoords.date_dd);
     drawText(sessionData.time_start   || '', workplanCoords.time_start);
     drawText(sessionData.time_end     || '', workplanCoords.time_end);
     drawText(sessionData.vehicle_num  || '', workplanCoords.vehicle_num);
