@@ -2015,6 +2015,9 @@ const sketchImages = {
 
   // 추가작업용 부분 초기화 — 위험성평가·스케치·아웃트리거 리셋, 작업자 유지
   function resetSessionForAdd() {
+    // ── 작업지휘자 서명 초기화 (추가작업마다 다시 받음) ──
+    const supervisor = confirmWorkers.find(w => w.role === '작업지휘자');
+    if (supervisor && supervisor.name) delete sessionSigs[supervisor.name];
     // ── 위험성평가 ──
     riskOrder     = [];
     selectedRisks = [];
@@ -2145,11 +2148,7 @@ const sketchImages = {
       showToast('⚠️ 아웃트리거 방법을 선택해주세요');
       return;
     }
-    if (mode === 'new') {
-      go('s-sig-check');
-    } else {
-      go('s-preview');
-    }
+    go('s-sig-check');
   }
 
   // ══════════════════════════════════════════════
