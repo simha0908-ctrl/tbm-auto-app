@@ -1,8 +1,8 @@
-const CACHE_NAME = 'tbm-v1';
+const CACHE_NAME = 'tbm-v2';
 
 // 캐시할 앱 파일 목록
 const APP_FILES = [
-  './app_mockup.html',
+  './index.html',
   './manifest.json',
   './data.js',
   './page9_base.js',
