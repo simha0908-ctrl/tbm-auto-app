@@ -2061,14 +2061,17 @@ const sketchImages = {
       return;
     }
     sessionData.location = val;
-    // 추가작업은 현재시간 기준으로 시작/종료시간 자동 설정
-    const now     = new Date();
-    const hh      = String(now.getHours()).padStart(2, '0');
-    const mm      = String(now.getMinutes()).padStart(2, '0');
-    const endHRaw = now.getHours() + 3;
-    const endH    = Math.min(endHRaw, 17);  // 최대 17:00
-    sessionData.time_start = hh + ':' + mm;
-    sessionData.time_end   = String(endH).padStart(2, '0') + ':' + mm;
+    // 추가작업은 현재시간 기준으로 시작/종료시간 자동 설정 (30분 단위 반올림)
+    const now        = new Date();
+    const totalMins  = now.getHours() * 60 + now.getMinutes();
+    const rounded    = Math.round(totalMins / 30) * 30;
+    const startH     = Math.floor(rounded / 60) % 24;
+    const startM     = rounded % 60;
+    const endRounded = rounded + 180;  // +3시간
+    const endH       = Math.min(Math.floor(endRounded / 60) % 24, 17);
+    const endM       = Math.min(Math.floor(endRounded / 60), 17) === 17 ? 0 : endRounded % 60;
+    sessionData.time_start = String(startH).padStart(2, '0') + ':' + String(startM).padStart(2, '0');
+    sessionData.time_end   = String(endH).padStart(2, '0')   + ':' + String(endM).padStart(2, '0');
     setMode('add');
     go('s-risk');
   }
