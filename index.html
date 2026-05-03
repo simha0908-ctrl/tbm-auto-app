@@ -2117,7 +2117,7 @@ const sketchImages = {
       showToast('⚠️ 위험요인을 1개 이상 선택해주세요');
       return;
     }
-    go('s-checklist');
+    go(mode === 'add' ? 's-sketch' : 's-checklist');
   }
 
   function goFromChecklist() {
