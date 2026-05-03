@@ -2015,7 +2015,8 @@ const sketchImages = {
 
   // 추가작업용 부분 초기화 — 위험성평가·스케치·아웃트리거 리셋, 작업자 유지
   function resetSessionForAdd() {
-    // ── 작업지휘자 서명 초기화 (추가작업마다 다시 받음) ──
+    // ── localStorage에서 서명 복원 후 작업지휘자만 삭제 ──
+    try { sessionSigs = JSON.parse(localStorage.getItem('tbm_sigs') || '{}'); } catch(e) { sessionSigs = {}; }
     const supervisor = confirmWorkers.find(w => w.role === '작업지휘자');
     if (supervisor && supervisor.name) delete sessionSigs[supervisor.name];
     // ── 위험성평가 ──
@@ -2146,12 +2147,13 @@ const sketchImages = {
 
   function goFromSigCheck() {
     syncConfirmToSession();
-    const names = getSessionWorkerNames();
-    if (names.length === 0) {
+    const allWorkers = getSessionWorkerNames();
+    const toCheck = mode === 'add' ? allWorkers.slice(0, 1) : allWorkers;
+    if (toCheck.length === 0) {
       showToast('⚠️ 작업자 정보가 없습니다');
       return;
     }
-    const unsigned = names.filter(n => !sessionSigs[n]);
+    const unsigned = toCheck.filter(n => !sessionSigs[n]);
     if (unsigned.length > 0) {
       showToast(`⚠️ 미서명 작업자가 있습니다 (${unsigned.join(', ')})`);
       return;
@@ -2172,6 +2174,7 @@ const sketchImages = {
   // ══════════════════════════════════════════════
   function resetSession() {
     sessionSigs = {};  // 신규작업: 서명 초기화
+    try { localStorage.removeItem('tbm_sigs'); } catch(e) {}
     // ── 상태 변수 ──
     selectedGong          = { code: 'D17', name: '수목 및 나뭇가지 자르기' };
     confirmWorkers        = [{ name: '', role: '작업지휘자' }];
@@ -3573,7 +3576,10 @@ const sketchImages = {
     const doneEl = document.getElementById('sig-check-done-msg');
     if (!listEl) return;
 
-    const names = getSessionWorkerNames();
+    const allWorkers = getSessionWorkerNames();
+    const names = mode === 'add'
+      ? allWorkers.slice(0, 1)  // 추가작업: 작업지휘자(첫번째)만
+      : allWorkers;
 
     const allDone = names.length > 0 && names.every(n => sessionSigs[n]);
     doneEl.style.display = allDone ? 'block' : 'none';
@@ -3628,9 +3634,10 @@ const sketchImages = {
         document.getElementById('sig-pad').height);
       img.src = sessionSigs[name];
     }
-    // 저장 콜백: sessionSigs에 저장 후 화면 갱신
+    // 저장 콜백: sessionSigs에 저장 후 localStorage 동기화
     _sigSaveCallback = (dataURL) => {
       sessionSigs[name] = dataURL;
+      try { localStorage.setItem('tbm_sigs', JSON.stringify(sessionSigs)); } catch(e) {}
       renderSigCheck();
     };
     document.getElementById('sig-modal').style.display = 'flex';
