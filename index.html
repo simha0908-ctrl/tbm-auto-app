@@ -3642,11 +3642,15 @@ const sketchImages = {
         document.getElementById('sig-pad').height);
       img.src = sessionSigs[name];
     }
-    // 저장 콜백: sessionSigs에 저장 후 localStorage 동기화
+    // 저장 콜백: sessionSigs에 저장 → 다음 미서명자 연속 오픈
     _sigSaveCallback = (dataURL) => {
       sessionSigs[name] = dataURL;
       try { localStorage.setItem('tbm_sigs', JSON.stringify(sessionSigs)); } catch(e) {}
       renderSigCheck();
+      // 다음 미서명자 자동 오픈 (신규: 전체, 추가: 작업지휘자만이라 해당없음)
+      const checkList = mode === 'add' ? getSessionWorkerNames().slice(0,1) : getSessionWorkerNames();
+      const next = checkList.find(n => !sessionSigs[n]);
+      if (next) setTimeout(() => openSigPadFromSigCheck(next), 200);
     };
     document.getElementById('sig-modal').style.display = 'flex';
   }
