@@ -884,7 +884,7 @@
       </div>
     </div>
     <div class="bottom-bar">
-      <button class="btn-primary" onclick="go('s-preview')">미리보기 →</button>
+      <button class="btn-primary" onclick="goFromSigCheck()">미리보기 →</button>
     </div>
   </div>
 
@@ -2142,6 +2142,16 @@ const sketchImages = {
     document.querySelectorAll('#out-grid .out-card').forEach(c => c.classList.remove('selected'));
     el.classList.add('selected');
     selectedOutKey = el.getAttribute('data-out-key');
+  }
+
+  function goFromSigCheck() {
+    const names = getSessionWorkerNames();
+    const unsigned = names.filter(n => !sessionSigs[n]);
+    if (unsigned.length > 0) {
+      showToast(`⚠️ 미서명 작업자가 있습니다 (${unsigned.join(', ')})`);
+      return;
+    }
+    go('s-preview');
   }
 
   function goFromOutrigger() {
