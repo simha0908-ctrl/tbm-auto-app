@@ -1503,21 +1503,6 @@
     </div>
     <div class="body" style="padding-top:24px;">
 
-      <!-- 작업자 명단 섹션 -->
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-        <div style="font-size:12px; font-weight:700; color:var(--text-muted); letter-spacing:0.5px;">작업자 관리</div>
-        <div id="worker-count-label" style="font-size:12px; font-weight:700; color:var(--primary);">0 / 20명</div>
-      </div>
-      <div style="background:var(--white); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; margin-bottom:20px;">
-        <!-- 동적 작업자 목록 -->
-        <div id="worker-list"></div>
-        <!-- 작업자 추가 버튼 -->
-        <div id="worker-add-btn" style="padding:16px 20px; display:flex; align-items:center; gap:12px; cursor:pointer;" onclick="openWorkerModal(null)">
-          <div style="width:40px; height:40px; border-radius:50%; background:#E8EEF5; display:flex; align-items:center; justify-content:center; font-size:22px; color:var(--primary);">+</div>
-          <div style="font-size:15px; font-weight:600; color:var(--primary);">작업자 추가</div>
-        </div>
-      </div>
-
       <!-- Vision AI 설정 섹션 제거됨 (수기 입력 방식으로 변경) -->
 
       <!-- 앱 정보 섹션 -->
@@ -2014,6 +1999,7 @@ const sketchImages = {
 </script>
   <script>
   let mode = 'new';
+  let sessionSigs = {};  // 현재 작업 서명 (신규작업 시 초기화, 추가작업 시 유지)
 
   function setMode(m) { mode = m; }
 
@@ -2166,6 +2152,7 @@ const sketchImages = {
   // 세션 전체 초기화 (신규작업 / 추가작업 시작 시)
   // ══════════════════════════════════════════════
   function resetSession() {
+    sessionSigs = {};  // 신규작업: 서명 초기화
     // ── 상태 변수 ──
     selectedGong          = { code: 'D17', name: '수목 및 나뭇가지 자르기' };
     confirmWorkers        = [{ name: '', role: '작업지휘자' }];
@@ -2293,13 +2280,13 @@ const sketchImages = {
   // 이름으로 서명 HTMLImageElement 반환 (없으면 null)
   async function getWorkerSigImg(name) {
     if (!name) return null;
-    const worker = await getWorkerByName(name);
-    if (!worker || !worker.sigDataURL) return null;
+    const dataURL = sessionSigs[name];
+    if (!dataURL) return null;
     return new Promise((resolve) => {
       const img = new Image();
       img.onload  = () => resolve(img);
       img.onerror = () => resolve(null);
-      img.src = worker.sigDataURL;
+      img.src = dataURL;
     });
   }
 
@@ -3564,16 +3551,14 @@ const sketchImages = {
     if (!listEl) return;
 
     const names = getSessionWorkerNames();
-    const workers = await Promise.all(names.map(n => getWorkerByName(n)));
 
-    const allDone = workers.every(w => w && w.sigDataURL);
+    const allDone = names.length > 0 && names.every(n => sessionSigs[n]);
     doneEl.style.display = allDone ? 'block' : 'none';
 
     listEl.innerHTML = names.map((name, i) => {
-      const w = workers[i];
-      const hasSig = w && w.sigDataURL;
+      const hasSig = !!sessionSigs[name];
       const previewHtml = hasSig
-        ? `<img src="${w.sigDataURL}" style="height:40px; max-width:80px; object-fit:contain; border-radius:4px; border:1px solid #eee;">`
+        ? `<img src="${sessionSigs[name]}" style="height:40px; max-width:80px; object-fit:contain; border-radius:4px; border:1px solid #eee;">`
         : `<span style="font-size:12px; color:#aaa;">미등록</span>`;
       return `
         <div style="padding:16px 20px; ${i < names.length - 1 ? 'border-bottom:1px solid var(--border);' : ''}
@@ -3612,24 +3597,17 @@ const sketchImages = {
   function openSigPadFromSigCheck(name) {
     initSigPad();
     clearSigPad();
-    // 기존 서명 있으면 미리 불러오기
-    getWorkerByName(name).then(w => {
-      if (w && w.sigDataURL) {
-        const img = new Image();
-        img.onload = () => _sigPadCtx.drawImage(img, 0, 0,
-          document.getElementById('sig-pad').width,
-          document.getElementById('sig-pad').height);
-        img.src = w.sigDataURL;
-      }
-    });
-    // 저장 콜백: DB에 저장 후 sig-check 화면 갱신
-    _sigSaveCallback = async (dataURL) => {
-      const existing = await getWorkerByName(name);
-      await saveWorker({
-        id:         existing ? existing.id : undefined,
-        name:       name,
-        sigDataURL: dataURL,
-      });
+    // 이미 서명이 있으면 미리 불러오기
+    if (sessionSigs[name]) {
+      const img = new Image();
+      img.onload = () => _sigPadCtx.drawImage(img, 0, 0,
+        document.getElementById('sig-pad').width,
+        document.getElementById('sig-pad').height);
+      img.src = sessionSigs[name];
+    }
+    // 저장 콜백: sessionSigs에 저장 후 화면 갱신
+    _sigSaveCallback = (dataURL) => {
+      sessionSigs[name] = dataURL;
       renderSigCheck();
     };
     document.getElementById('sig-modal').style.display = 'flex';
