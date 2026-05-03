@@ -868,12 +868,12 @@
       </div>
       <div>
         <div class="header-title">서명 등록</div>
-        <div class="header-sub">STEP 6 / 6</div>
+        <div class="header-sub" id="sig-step-sub">STEP 7 / 7</div>
       </div>
     </div>
     <div class="progress-bar">
-      <div class="progress-label"><span>서명 등록</span><span>1 / 7</span></div>
-      <div class="progress-track"><div class="progress-fill" style="width:14%"></div></div>
+      <div class="progress-label"><span>서명 등록</span><span id="sig-step-label">7 / 7</span></div>
+      <div class="progress-track"><div class="progress-fill" id="sig-progress" style="width:100%"></div></div>
     </div>
     <div class="body">
       <div class="section-title">서명 등록이 필요합니다</div>
@@ -884,7 +884,7 @@
       </div>
     </div>
     <div class="bottom-bar">
-      <button class="btn-primary" onclick="go('s-preview')">다음으로 →</button>
+      <button class="btn-primary" onclick="go('s-preview')">미리보기 →</button>
     </div>
   </div>
 
@@ -894,12 +894,12 @@
       <div class="header-back" onclick="go('s-confirm')"><span class="back-arrow"><svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 2L2 8L8 14" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="back-label">이전</span></div>
       <div>
         <div class="header-title">공종 선택</div>
-        <div class="header-sub">STEP 2 / 6</div>
+        <div class="header-sub">STEP 2 / 7</div>
       </div>
     </div>
     <div class="progress-bar">
-      <div class="progress-label"><span>공종 선택</span><span>2 / 6</span></div>
-      <div class="progress-track"><div class="progress-fill" style="width:33%"></div></div>
+      <div class="progress-label"><span>공종 선택</span><span>2 / 7</span></div>
+      <div class="progress-track"><div class="progress-fill" style="width:29%"></div></div>
     </div>
     <div class="body">
       <div class="section-title">공종을 선택하세요</div>
@@ -1290,14 +1290,14 @@
       </div>
     </div>
     <div class="bottom-bar">
-      <button class="btn-primary" onclick="goFromOutrigger()">미리보기 →</button>
+      <button class="btn-primary" onclick="goFromOutrigger()">다음 →</button>
     </div>
   </div>
 
   <!-- ══════════════ S8-1: 미리보기 ══════════════ -->
   <div class="screen" id="s-preview">
     <div class="header">
-      <div class="header-back" onclick="go('s-outrigger')"><span class="back-arrow"><svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 2L2 8L8 14" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="back-label">이전</span></div>
+      <div class="header-back" onclick="go('s-sig-check')"><span class="back-arrow"><svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 2L2 8L8 14" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="back-label">이전</span></div>
       <div>
         <div class="header-title">미리보기</div>
         <div class="header-sub">저장 전 최종 확인</div>
@@ -1344,7 +1344,7 @@
 
     <div class="bottom-bar">
       <button class="btn-primary" id="btn-save-all" onclick="saveAllDocs()">앨범에 저장 →</button>
-      <button class="btn-secondary" onclick="go('s-outrigger')">← 수정하기</button>
+      <button class="btn-secondary" onclick="go('s-sig-check')">← 수정하기</button>
     </div>
   </div>
 
@@ -1463,12 +1463,12 @@
       <div class="header-back" onclick="go('s-main')"><span class="back-arrow"><svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 2L2 8L8 14" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="back-label">이전</span></div>
       <div>
         <div class="header-title">추가 작업</div>
-        <div class="header-sub">STEP 1 / 3</div>
+        <div class="header-sub">STEP 1 / 5</div>
       </div>
     </div>
     <div class="progress-bar">
-      <div class="progress-label"><span>작업장소 입력</span><span>1 / 3</span></div>
-      <div class="progress-track"><div class="progress-fill" style="width:33%"></div></div>
+      <div class="progress-label"><span>작업장소 입력</span><span>1 / 5</span></div>
+      <div class="progress-track"><div class="progress-fill" style="width:20%"></div></div>
     </div>
     <div class="body">
       <div class="section-title">새 작업장소를 입력하세요</div>
@@ -2681,8 +2681,8 @@ const sketchImages = {
     // 신규: 추출확인1·공종2·위험성평가3·체크리스트4·스케치5·아웃트리거6
     // 추가: 장소1·스케치2·아웃트리거3
     const steps = mode === 'add'
-      ? { risk: [2,4,50], sketch: [3,4,75], out: [4,4,100] }
-      : { risk: [2,6,33], checklist: [3,6,50], sketch: [4,6,67], out: [5,6,83] };
+      ? { risk: [2,5,40], sketch: [3,5,60], out: [4,5,80] }
+      : { risk: [3,7,43], checklist: [4,7,57], sketch: [5,7,71], out: [6,7,86] };
 
     if (id === 's-risk') {
       const [cur, tot, pct] = steps.risk || [3,6,50];
@@ -2853,6 +2853,10 @@ const sketchImages = {
       renderHistory();
     }
     if (id === 's-sig-check') {
+      const [sigCur, sigTot, sigPct] = mode === 'add' ? [5,5,100] : [7,7,100];
+      document.getElementById('sig-step-sub').textContent   = `STEP ${sigCur} / ${sigTot}`;
+      document.getElementById('sig-step-label').textContent = `${sigCur} / ${sigTot}`;
+      document.getElementById('sig-progress').style.width   = sigPct + '%';
       renderSigCheck();
     }
     if (id === 's-preview') {
