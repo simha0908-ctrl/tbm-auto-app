@@ -2759,13 +2759,34 @@ const sketchImages = {
       const cfVtyp = document.getElementById('cf-vehicle-type');
       if (cfLoc)  cfLoc.value  = sessionData.location   || '';
       if (cfDate) cfDate.value = sessionData.date        || getTodayInputStr();
-      // 시간 기본값 설정 — input에 표시 + sessionData에도 반영
+      // 시간 기본값 설정 — 신규작업은 현재시간 30분 단위 반올림, 추가작업은 이미 설정된 값 사용
       if (cfTs) {
-        if (!sessionData.time_start) sessionData.time_start = '08:00';
+        if (!sessionData.time_start) {
+          if (mode === 'new') {
+            const _now = new Date();
+            const _rounded = Math.round((_now.getHours() * 60 + _now.getMinutes()) / 30) * 30;
+            const _sH = Math.floor(_rounded / 60) % 24;
+            const _sM = _rounded % 60;
+            sessionData.time_start = String(_sH).padStart(2, '0') + ':' + String(_sM).padStart(2, '0');
+          } else {
+            sessionData.time_start = '08:00';
+          }
+        }
         cfTs.value = sessionData.time_start;
       }
       if (cfTe) {
-        if (!sessionData.time_end) sessionData.time_end = '17:00';
+        if (!sessionData.time_end) {
+          if (mode === 'new') {
+            const _now2 = new Date();
+            const _rounded2 = Math.round((_now2.getHours() * 60 + _now2.getMinutes()) / 30) * 30;
+            const _eRounded = _rounded2 + 180;
+            const _eH = Math.min(Math.floor(_eRounded / 60) % 24, 17);
+            const _eM = Math.min(Math.floor(_eRounded / 60), 17) === 17 ? 0 : _eRounded % 60;
+            sessionData.time_end = String(_eH).padStart(2, '0') + ':' + String(_eM).padStart(2, '0');
+          } else {
+            sessionData.time_end = '17:00';
+          }
+        }
         cfTe.value = sessionData.time_end;
       }
       if (cfVnum) cfVnum.value = sessionData.vehicle_num || '';
