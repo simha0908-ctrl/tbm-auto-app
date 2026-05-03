@@ -2876,11 +2876,12 @@ const sketchImages = {
       document.getElementById('sig-step-label').textContent = `${sigCur} / ${sigTot}`;
       document.getElementById('sig-progress').style.width   = sigPct + '%';
       renderSigCheck();
-      // 추가작업: 작업지휘자 서명패드 자동 오픈
-      if (mode === 'add') {
-        const supName = getSessionWorkerNames()[0];
-        if (supName) setTimeout(() => openSigPadFromSigCheck(supName), 150);
-      }
+      // 서명패드 자동 오픈 — 첫번째 미서명 작업자
+      setTimeout(() => {
+        const names = mode === 'add' ? getSessionWorkerNames().slice(0,1) : getSessionWorkerNames();
+        const first = names.find(n => !sessionSigs[n]);
+        if (first) openSigPadFromSigCheck(first);
+      }, 150);
     }
     if (id === 's-preview') {
       renderPreview();
