@@ -862,13 +862,13 @@
   <!-- ══════════════ S4-b: 서명 등록 ══════════════ -->
   <div class="screen" id="s-sig-check">
     <div class="header">
-      <div class="header-back" onclick="go('s-confirm')">
+      <div class="header-back" onclick="go('s-outrigger')">
         <span class="back-arrow"><svg width="10" height="16" viewBox="0 0 10 16" fill="none"><path d="M8 2L2 8L8 14" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         <span class="back-label">이전</span>
       </div>
       <div>
         <div class="header-title">서명 등록</div>
-        <div class="header-sub">STEP 1 / 7</div>
+        <div class="header-sub">STEP 6 / 6</div>
       </div>
     </div>
     <div class="progress-bar">
@@ -884,7 +884,7 @@
       </div>
     </div>
     <div class="bottom-bar">
-      <button class="btn-primary" onclick="go('s-gong')">다음으로 →</button>
+      <button class="btn-primary" onclick="go('s-preview')">다음으로 →</button>
     </div>
   </div>
 
@@ -2145,7 +2145,11 @@ const sketchImages = {
       showToast('⚠️ 아웃트리거 방법을 선택해주세요');
       return;
     }
-    go('s-preview');
+    if (mode === 'new') {
+      go('s-sig-check');
+    } else {
+      go('s-preview');
+    }
   }
 
   // ══════════════════════════════════════════════
@@ -2678,7 +2682,7 @@ const sketchImages = {
     // 추가: 장소1·스케치2·아웃트리거3
     const steps = mode === 'add'
       ? { risk: [2,4,50], sketch: [3,4,75], out: [4,4,100] }
-      : { risk: [3,6,50], checklist: [4,6,67], sketch: [5,6,83], out: [6,6,95] };
+      : { risk: [2,6,33], checklist: [3,6,50], sketch: [4,6,67], out: [5,6,83] };
 
     if (id === 's-risk') {
       const [cur, tot, pct] = steps.risk || [3,6,50];
@@ -3541,7 +3545,7 @@ const sketchImages = {
     }
 
     syncConfirmToSession();
-    go('s-sig-check');
+    go('s-gong');
   }
 
   // ── s-sig-check 화면 렌더 ──
