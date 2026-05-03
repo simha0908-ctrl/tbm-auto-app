@@ -1479,6 +1479,18 @@
         <label class="input-label">새 작업장소</label>
         <input id="add-place-input" class="input-field" type="text" placeholder="예) 경기 수원시 팔달구 인계동 456">
       </div>
+      <div style="display:flex;gap:8px;margin-top:4px;">
+        <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+          <label class="input-label">시작시간</label>
+          <input id="add-time-start" type="time"
+            style="width:100%;padding:10px 8px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;outline:none;">
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+          <label class="input-label">종료시간</label>
+          <input id="add-time-end" type="time"
+            style="width:100%;padding:10px 8px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;outline:none;">
+        </div>
+      </div>
     </div>
     <div class="bottom-bar">
       <button class="btn-primary" onclick="goFromAddPlace()">다음 →</button>
@@ -2061,17 +2073,27 @@ const sketchImages = {
       return;
     }
     sessionData.location = val;
-    // 추가작업은 현재시간 기준으로 시작/종료시간 자동 설정 (30분 단위 반올림)
-    const now        = new Date();
-    const totalMins  = now.getHours() * 60 + now.getMinutes();
-    const rounded    = Math.round(totalMins / 30) * 30;
-    const startH     = Math.floor(rounded / 60) % 24;
-    const startM     = rounded % 60;
-    const endRounded = rounded + 180;  // +3시간
-    const endH       = Math.min(Math.floor(endRounded / 60) % 24, 17);
-    const endM       = Math.min(Math.floor(endRounded / 60), 17) === 17 ? 0 : endRounded % 60;
-    sessionData.time_start = String(startH).padStart(2, '0') + ':' + String(startM).padStart(2, '0');
-    sessionData.time_end   = String(endH).padStart(2, '0')   + ':' + String(endM).padStart(2, '0');
+    // 시간 필드 값 우선, 없으면 현재시간 30분 단위 반올림 자동 계산
+    const _tsEl = document.getElementById('add-time-start');
+    const _teEl = document.getElementById('add-time-end');
+    if (_tsEl && _tsEl.value) {
+      sessionData.time_start = _tsEl.value;
+    } else {
+      const now       = new Date();
+      const rounded   = Math.round((now.getHours() * 60 + now.getMinutes()) / 30) * 30;
+      const startH    = Math.floor(rounded / 60) % 24;
+      const startM    = rounded % 60;
+      sessionData.time_start = String(startH).padStart(2, '0') + ':' + String(startM).padStart(2, '0');
+    }
+    if (_teEl && _teEl.value) {
+      sessionData.time_end = _teEl.value;
+    } else {
+      const now2      = new Date();
+      const rounded2  = Math.round((now2.getHours() * 60 + now2.getMinutes()) / 30) * 30;
+      const endH      = Math.floor((rounded2 + 180) / 60) % 24;
+      const endM      = (rounded2 + 180) % 60;
+      sessionData.time_end = String(endH).padStart(2, '0') + ':' + String(endM).padStart(2, '0');
+    }
     setMode('add');
     go('s-risk');
   }
@@ -2748,6 +2770,17 @@ const sketchImages = {
       // 이전 장소 입력 초기화
       const inputEl = document.getElementById('add-place-input');
       if (inputEl) inputEl.value = '';
+      // 시간 필드 현재시간 30분 단위 자동 입력
+      const _now    = new Date();
+      const _r      = Math.round((_now.getHours() * 60 + _now.getMinutes()) / 30) * 30;
+      const _sH     = Math.floor(_r / 60) % 24;
+      const _sM     = _r % 60;
+      const _eH     = Math.floor((_r + 180) / 60) % 24;
+      const _eM     = (_r + 180) % 60;
+      const _tsEl   = document.getElementById('add-time-start');
+      const _teEl   = document.getElementById('add-time-end');
+      if (_tsEl) _tsEl.value = String(_sH).padStart(2,'0') + ':' + String(_sM).padStart(2,'0');
+      if (_teEl) _teEl.value = String(_eH).padStart(2,'0') + ':' + String(_eM).padStart(2,'0');
     }
     if (id === 's-confirm') {
       // 입력 필드에 sessionData 값 채우기
@@ -2780,8 +2813,8 @@ const sketchImages = {
             const _now2 = new Date();
             const _rounded2 = Math.round((_now2.getHours() * 60 + _now2.getMinutes()) / 30) * 30;
             const _eRounded = _rounded2 + 180;
-            const _eH = Math.min(Math.floor(_eRounded / 60) % 24, 17);
-            const _eM = Math.min(Math.floor(_eRounded / 60), 17) === 17 ? 0 : _eRounded % 60;
+            const _eH = Math.floor(_eRounded / 60) % 24;
+            const _eM = _eRounded % 60;
             sessionData.time_end = String(_eH).padStart(2, '0') + ':' + String(_eM).padStart(2, '0');
           } else {
             sessionData.time_end = '17:00';
