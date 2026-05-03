@@ -2145,7 +2145,12 @@ const sketchImages = {
   }
 
   function goFromSigCheck() {
+    syncConfirmToSession();
     const names = getSessionWorkerNames();
+    if (names.length === 0) {
+      showToast('⚠️ 작업자 정보가 없습니다');
+      return;
+    }
     const unsigned = names.filter(n => !sessionSigs[n]);
     if (unsigned.length > 0) {
       showToast(`⚠️ 미서명 작업자가 있습니다 (${unsigned.join(', ')})`);
