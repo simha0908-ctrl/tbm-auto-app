@@ -3554,14 +3554,7 @@ const sketchImages = {
     }
 
     syncConfirmToSession();
-    const names = getSessionWorkerNames();
-    const checks = await Promise.all(names.map(n => getWorkerByName(n)));
-    const hasUnsigned = checks.some(w => !w || !w.sigDataURL);
-    if (hasUnsigned) {
-      go('s-sig-check');
-    } else {
-      go('s-gong');
-    }
+    go('s-sig-check');
   }
 
   // ── s-sig-check 화면 렌더 ──
