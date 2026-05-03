@@ -807,13 +807,13 @@
         <div class="result-row" style="gap:8px;">
           <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
             <div class="result-label">시작시간</div>
-            <input id="cf-time-start" type="time"
+            <input id="cf-time-start" type="time" step="1800"
               style="width:100%;padding:10px 8px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;outline:none;"
               oninput="sessionData.time_start=this.value">
           </div>
           <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
             <div class="result-label">종료시간</div>
-            <input id="cf-time-end" type="time"
+            <input id="cf-time-end" type="time" step="1800"
               style="width:100%;padding:10px 8px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;outline:none;"
               oninput="sessionData.time_end=this.value">
           </div>
@@ -1482,12 +1482,12 @@
       <div style="display:flex;gap:8px;margin-top:4px;">
         <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
           <label class="input-label">시작시간</label>
-          <input id="add-time-start" type="time"
+          <input id="add-time-start" type="time" step="1800"
             style="width:100%;padding:10px 8px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;outline:none;">
         </div>
         <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
           <label class="input-label">종료시간</label>
-          <input id="add-time-end" type="time"
+          <input id="add-time-end" type="time" step="1800"
             style="width:100%;padding:10px 8px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;outline:none;">
         </div>
       </div>
