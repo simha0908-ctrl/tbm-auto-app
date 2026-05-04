@@ -3867,6 +3867,15 @@ const sketchImages = {
         results.push({ label:'체크리스트', filename:'', canvas:null, ok:false, err:e.message });
       }
 
+      // ── 3-b. D34 체크리스트 (항상 추가) ──
+      try {
+        const d34Idx = 4;  // p5 = D34
+        const c34 = await generateChecklistCanvas(d34Idx);
+        results.push({ label:'체크리스트(D34)', filename:`체크리스트_D34_${prefix}.jpg`, canvas:c34, ok:true });
+      } catch(e) {
+        results.push({ label:'체크리스트(D34)', filename:'', canvas:null, ok:false, err:e.message });
+      }
+
       // ── 합본 캔버스 생성 (2×2) ──
       setSaveProgress('⏳ 합본 이미지 생성 중...');
       const CW = 827, CH = 1169;  // 개별 캔버스 크기 (SCALE=0.5 기준)
