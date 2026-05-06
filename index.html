@@ -789,6 +789,13 @@
       <div class="result-card">
 
         <div class="result-row" style="flex-direction:column;gap:4px;">
+          <div class="result-label">작업내용</div>
+          <input id="cf-work-content" type="text" placeholder="예) 배전설비안전센터 직영작업"
+            style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;outline:none;"
+            oninput="sessionData.work_content=this.value">
+        </div>
+
+        <div class="result-row" style="flex-direction:column;gap:4px;">
           <div class="result-label">작업장소</div>
           <input id="cf-location" type="text" placeholder="예) 경기 수원시 팔달구 인계동 123"
             style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;outline:none;"
@@ -2793,12 +2800,15 @@ const sketchImages = {
     }
     if (id === 's-confirm') {
       // 입력 필드에 sessionData 값 채우기
+      const cfWc   = document.getElementById('cf-work-content');
       const cfLoc  = document.getElementById('cf-location');
       const cfDate = document.getElementById('cf-date');
       const cfTs   = document.getElementById('cf-time-start');
       const cfTe   = document.getElementById('cf-time-end');
       const cfVnum = document.getElementById('cf-vehicle-num');
       const cfVtyp = document.getElementById('cf-vehicle-type');
+      if (cfWc)   cfWc.value   = sessionData.work_content || '배전설비안전센터 직영작업';
+      if (!sessionData.work_content) sessionData.work_content = '배전설비안전센터 직영작업';
       if (cfLoc)  cfLoc.value  = sessionData.location   || '';
       if (cfDate) cfDate.value = sessionData.date        || getTodayInputStr();
       // 시간 기본값 설정 — 신규작업은 현재시간 30분 단위 반올림, 추가작업은 이미 설정된 값 사용
@@ -3459,6 +3469,7 @@ const sketchImages = {
   let sessionData = {
     date:         getTodayInputStr(),
     location:     '',
+    work_content: '',
     worker1_name: '',
     worker2_name: '',
     worker3_name: '',
@@ -4147,7 +4158,7 @@ const sketchImages = {
     }
 
     // ── 7. 고정값 ──
-    drawText('배전설비안전센터 직영작업', workplanCoords.work_content);
+    drawText(sessionData.work_content || '배전설비안전센터 직영작업', workplanCoords.work_content);
 
     // ── 8. 차량종류 연동값 (활선/저압별 하중·반경) ──
     const spec = VEHICLE_SPECS[selectedVehicleType] || VEHICLE_SPECS['활선'];
@@ -4448,7 +4459,7 @@ const sketchImages = {
 
     // ── 4. 고정값 ──
     drawText('배전설비안전센터',      coords['cl_시공사']);
-    drawText('배전설비안전센터 직영작업', coords['cl_공사명']);
+    drawText(sessionData.work_content || '배전설비안전센터 직영작업', coords['cl_공사명']);
 
     // ── 5. 일시 (sessionData 기준) ──
     const today = sessionData.date || '';
