@@ -3322,8 +3322,7 @@ const sketchImages = {
     // ── 일일중점관리 텍스트 (위험요인 / 감소대책)
     daily_text_hazard: { x:388, y:1322, fontSize:30 }, // 1순위 위험요인 텍스트
     daily_text_action: { x:388, y:1390, fontSize:30 }, // 1순위 감소대책 텍스트
-    // ── 오전 / 중식후 체크박스
-    check_오전:   { x:750, y:772 },  // 오전 체크박스
+    // ── 중식후 체크박스 (추가작업 시 항상 체크)
     check_중식후: { x:978, y:772 },  // 중식후 체크박스
     // ── 서명란 이름 + 서명
     sig_name1:      { x:192,  y:1876, fontSize:34 },  // 서명자1 이름
@@ -4340,13 +4339,11 @@ const sketchImages = {
       drawText(selectedRisks[0].action, tbmCoords.daily_text_action);
     }
 
-    // ── 5-1. 추가작업: 시작시간 기준 오전/중식후 체크박스 ──
-    if (mode === 'add') {
+    // ── 5-1. 시작시간 13시 이후 → 중식후 체크박스 (신규/추가 공통) ──
+    {
       const startHour = parseInt((sessionData.time_start || '08:00').split(':')[0], 10);
       if (startHour >= 13) {
         drawCheck(tbmCoords.check_중식후.x, tbmCoords.check_중식후.y);
-      } else {
-        drawCheck(tbmCoords.check_오전.x, tbmCoords.check_오전.y);
       }
     }
 
