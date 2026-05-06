@@ -2807,8 +2807,7 @@ const sketchImages = {
       const cfTe   = document.getElementById('cf-time-end');
       const cfVnum = document.getElementById('cf-vehicle-num');
       const cfVtyp = document.getElementById('cf-vehicle-type');
-      if (cfWc)   cfWc.value   = sessionData.work_content || '배전설비안전센터 직영작업';
-      if (!sessionData.work_content) sessionData.work_content = '배전설비안전센터 직영작업';
+      if (cfWc)   cfWc.value   = sessionData.work_content || '';
       if (cfLoc)  cfLoc.value  = sessionData.location   || '';
       if (cfDate) cfDate.value = sessionData.date        || getTodayInputStr();
       // 시간 기본값 설정 — 신규작업은 현재시간 30분 단위 반올림, 추가작업은 이미 설정된 값 사용
@@ -4158,7 +4157,7 @@ const sketchImages = {
     }
 
     // ── 7. 고정값 ──
-    drawText(sessionData.work_content || '배전설비안전센터 직영작업', workplanCoords.work_content);
+    drawText(sessionData.work_content || '', workplanCoords.work_content);
 
     // ── 8. 차량종류 연동값 (활선/저압별 하중·반경) ──
     const spec = VEHICLE_SPECS[selectedVehicleType] || VEHICLE_SPECS['활선'];
@@ -4459,7 +4458,7 @@ const sketchImages = {
 
     // ── 4. 고정값 ──
     drawText('배전설비안전센터',      coords['cl_시공사']);
-    drawText(sessionData.work_content || '배전설비안전센터 직영작업', coords['cl_공사명']);
+    drawText(sessionData.work_content || '', coords['cl_공사명']);
 
     // ── 5. 일시 (sessionData 기준) ──
     const today = sessionData.date || '';
