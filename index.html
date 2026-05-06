@@ -2017,6 +2017,13 @@ const sketchImages = {
       showToast('⚠️ 먼저 신규 작업을 완료해주세요');
       return;
     }
+    // confirmWorkers 복원 (페이지 재시작 시에도 작업자 유지)
+    try {
+      const restored = JSON.parse(saved);
+      if (Array.isArray(restored) && restored.length > 0) {
+        confirmWorkers = restored;
+      }
+    } catch(e) {}
     go('s-add-place');
   }
 
