@@ -3837,13 +3837,35 @@ const sketchImages = {
     el.textContent = msg;
   }
 
-  function downloadCanvas(canvas, filename) {
+  async function downloadCanvas(canvas, filename) {
+    // canvas → Blob
+    const blob = await new Promise(resolve =>
+      canvas.toBlob(resolve, 'image/jpeg', 0.92)
+    );
+    if (!blob) throw new Error('이미지 생성 실패');
+
+    // iOS 등 모바일: Web Share API로 사진첩 저장
+    // (홈 화면에 추가한 standalone PWA에서는 <a download>가 동작하지 않음)
+    const file = new File([blob], filename, { type: 'image/jpeg' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file], title: filename });
+        return;                        // 공유시트에서 "이미지 저장" → 사진첩
+      } catch (e) {
+        if (e.name === 'AbortError') return;   // 사용자가 취소
+        // 그 외 실패 → 아래 다운로드 폴백
+      }
+    }
+
+    // 폴백: 데스크톱 / 안드로이드 크롬 등 (다운로드 지원 환경)
+    const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = canvas.toDataURL('image/jpeg', 0.92);
+    a.href = url;
     a.download = filename;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
   async function saveAllDocs() {
@@ -3969,8 +3991,7 @@ const sketchImages = {
 
       // ── 합본 다운로드 ──
       setSaveProgress('⏳ 저장 중...');
-      await new Promise(res => setTimeout(res, 150));
-      downloadCanvas(combined, `${prefix}.jpg`);
+      await downloadCanvas(combined, `${prefix}.jpg`);
 
       // ── 완료 화면 업데이트 ──
       const doneSubEl   = document.getElementById('done-sub');
