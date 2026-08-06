@@ -2140,19 +2140,55 @@ const sketchImages = {
   function setMode(m) { mode = m; }
 
   // 추가작업 진입 — 신규작업 완료 여부 확인
-  function tryAddMode() {
-    const saved = localStorage.getItem('tbm_lastWorkers');
-    if (!saved) {
-      showToast('⚠️ 먼저 신규 작업을 완료해주세요');
-      return;
-    }
-    // confirmWorkers 복원 (페이지 재시작 시에도 작업자 유지)
+  // ── 신규 작업 스냅샷 ──
+  // 안드로이드 크롬은 백그라운드 PWA를 수시로 종료·재로드하므로, 메모리에만 있던
+  // 작업계획서 내용(sessionData·공종·위험요인)이 추가작업 때 날아갔다.
+  // iOS는 페이지를 살려둬서 증상이 안 나타났음. → localStorage에 스냅샷 저장.
+  const LAST_SESSION_KEY = 'tbm_lastSession';
+
+  function saveLastSession() {
     try {
-      const restored = JSON.parse(saved);
-      if (Array.isArray(restored) && restored.length > 0) {
-        confirmWorkers = restored;
-      }
+      localStorage.setItem(LAST_SESSION_KEY, JSON.stringify({
+        savedDate:      getTodayInputStr(),
+        sessionData:    sessionData,
+        selectedGong:   selectedGong,
+        selectedRisks:  selectedRisks,
+        confirmWorkers: confirmWorkers.map(w => ({ name: w.name, role: w.role })),
+      }));
     } catch(e) {}
+  }
+
+  function restoreLastSession() {
+    let s = null;
+    try { s = JSON.parse(localStorage.getItem(LAST_SESSION_KEY) || 'null'); } catch(e) {}
+    if (!s || !s.sessionData) return false;
+
+    Object.assign(sessionData, s.sessionData);
+    // 날짜가 지난 스냅샷이면 오늘로 갱신 (옛 날짜로 서류가 나가는 것 방지)
+    if (s.savedDate !== getTodayInputStr()) sessionData.date = getTodayInputStr();
+
+    if (s.selectedGong && s.selectedGong.code) selectedGong = s.selectedGong;
+    if (Array.isArray(s.selectedRisks))        selectedRisks = s.selectedRisks;
+    if (Array.isArray(s.confirmWorkers) && s.confirmWorkers.length) {
+      confirmWorkers = s.confirmWorkers;
+    }
+    return true;
+  }
+
+  function tryAddMode() {
+    const restored = restoreLastSession();
+    if (!restored) {
+      // 구버전 데이터 폴백 — 작업자 목록만이라도 살린다
+      const saved = localStorage.getItem('tbm_lastWorkers');
+      if (!saved) {
+        showToast('⚠️ 먼저 신규 작업을 완료해주세요');
+        return;
+      }
+      try {
+        const workers = JSON.parse(saved);
+        if (Array.isArray(workers) && workers.length > 0) confirmWorkers = workers;
+      } catch(e) {}
+    }
     go('s-add-place');
   }
 
@@ -2918,12 +2954,21 @@ const sketchImages = {
       const infoEl = document.getElementById('add-prev-info');
       if (infoEl) {
         const workers = confirmWorkers.map(w => w.name).filter(Boolean).join(' · ') || '(없음)';
-        const risk1   = selectedRisks[0] ? selectedRisks[0].hazard : '(없음)';
+        // selectedRisks는 바로 위 resetSessionForAdd()에서 비워지므로 스냅샷에서 읽는다
+        let risk1 = '(없음)';
+        try {
+          const snap = JSON.parse(localStorage.getItem(LAST_SESSION_KEY) || 'null');
+          if (snap && Array.isArray(snap.selectedRisks) && snap.selectedRisks[0]) {
+            risk1 = snap.selectedRisks[0].hazard;
+          }
+        } catch(e) {}
         infoEl.innerHTML =
-          '<b>📋 작업 정보</b><br>' +
+          '<b>📋 이어받는 작업 정보</b><br>' +
           '작업자: ' + workers + '<br>' +
           '공종: ' + selectedGong.code + ' ' + selectedGong.name + '<br>' +
-          '1순위 위험요인: ' + risk1;
+          '차량번호: ' + (sessionData.vehicle_num || '(없음)') + '<br>' +
+          '작업내용: ' + (sessionData.work_content || '(없음)') + '<br>' +
+          '<span style="color:var(--text-muted);font-size:12px;">이전 1순위 위험요인: ' + risk1 + ' (위험성평가는 다시 선택합니다)</span>';
       }
       // 이전 장소 입력 초기화
       const inputEl = document.getElementById('add-place-input');
@@ -3071,6 +3116,7 @@ const sketchImages = {
       code: el.querySelector('.select-code').textContent.trim(),
       name: el.querySelector('.select-text').textContent.trim()
     };
+    saveLastSession();
   }
 
   function renderChecklist() {
@@ -3728,6 +3774,7 @@ const sketchImages = {
         confirmWorkers.map(function(w) { return { name: w.name, role: w.role }; })
       ));
     } catch(e) {}
+    saveLastSession();
   }
 
   // ── 서명 체크 → 미등록자 있으면 s-sig-check, 없으면 바로 s-gong ──
@@ -4202,6 +4249,8 @@ const sketchImages = {
 
       // ── 이력 기록 ──
       addToHistory(mode);
+      // 추가작업이 이어받을 스냅샷 갱신 (공종·위험요인 확정 상태 반영)
+      saveLastSession();
 
       setSaveProgress('');
       go('s-done');
