@@ -1606,7 +1606,19 @@
         <input id="wh-issuer" class="input-field" type="text" placeholder="예) 심상희">
       </div>
 
-      <div style="background:var(--primary-light);border-radius:var(--radius-sm);padding:13px 15px;margin-top:6px;font-size:12px;color:var(--text-sub);line-height:1.7;">
+      <div class="section-title" style="margin-top:22px;">수령인 서명</div>
+      <div class="section-sub">안내서를 전달하고 수령인에게 직접 서명받으세요</div>
+      <div onclick="openWihaeSigPad()" style="background:var(--white);border:1.5px dashed var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center;cursor:pointer;min-height:96px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+        <div id="wh-sig-hint" style="font-size:13px;color:var(--text-muted);line-height:1.6;">
+          ✍️ 여기를 눌러 서명받기<br><span style="font-size:11px;">서명 없이도 저장은 됩니다</span>
+        </div>
+        <img id="wh-sig-img" style="display:none;max-height:80px;max-width:100%;">
+      </div>
+      <div id="wh-sig-clear" style="display:none;text-align:right;margin-top:6px;">
+        <span onclick="clearWihaeSig()" style="font-size:12px;color:var(--text-muted);cursor:pointer;text-decoration:underline;">서명 지우기</span>
+      </div>
+
+      <div style="background:var(--primary-light);border-radius:var(--radius-sm);padding:13px 15px;margin-top:16px;font-size:12px;color:var(--text-sub);line-height:1.7;">
         ※ <b>관련 법령자료(붙임3)를 반드시 함께 발부</b>하고, 발부 후 수령인에게 <b>수령증</b>을 받으세요.
       </div>
     </div>
@@ -2690,6 +2702,8 @@ const sketchImages = {
         document.getElementById('sig-pad').height);
       img.src = _pendingSigDataURL;
     }
+    document.getElementById('sig-modal-title').textContent = '서명 입력';
+    _sigSaveCallback = null;      // 다른 화면에서 남은 콜백 해제
     document.getElementById('sig-modal').style.display = 'flex';
   }
 
@@ -2865,6 +2879,7 @@ const sketchImages = {
     }
     if (id === 's-wihae') {
       loadWihaeSettings();
+      renderWihaeSig();
     }
     if (id === 's-sketch-free') {
       // 진입할 때마다 초기화 (이전 작업 잔류 방지)
@@ -3490,7 +3505,12 @@ const sketchImages = {
     r_addr:     { x: 247, y:1511, fontSize:30 },   // 수령증-주소
     r_name:     { x: 247, y:1567, fontSize:30 },   // 수령증-성명
     r_issuer:   { x: 247, y:1614, fontSize:30 },   // 수령증-발행자
+    r_sig:      { x: 560, y:1508, w:300, h:104 },  // 수령인 서명 ((인) 오른쪽 빈칸)
   };
+
+  // 위해안내서 A4 배치 — 양식(1417×1667)을 A4 200dpi(1653×2339) 안에 앉힌다
+  // 좌우 여백 118px(=15mm), 상하 여백 336px씩
+  const WIHAE_PAGE = { W:1653, H:2339, OX:118, OY:336 };
 
   // ── 체크리스트 좌표 (200dpi, 1653×2339px 기준) — 공종별 ──
   const clCoords = {
@@ -3798,6 +3818,7 @@ const sketchImages = {
         document.getElementById('sig-pad').height);
       img.src = sessionSigs[name];
     }
+    document.getElementById('sig-modal-title').textContent = name + ' 서명';
     // 저장 콜백: sessionSigs에 저장 → 다음 미서명자 연속 오픈
     _sigSaveCallback = (dataURL) => {
       sessionSigs[name] = dataURL;
@@ -3991,19 +4012,20 @@ const sketchImages = {
     const canShareFile = !!(navigator.canShare && navigator.canShare({ files: [file] }));
     const canDownload  = 'download' in document.createElement('a');
 
+    // 'shared' | 'cancelled' | 'failed'
     async function shareFile() {
       try {
         await navigator.share({ files: [file], title: filename });
-        return true;                   // 공유시트에서 "이미지 저장" → 사진첩
+        return 'shared';               // 공유시트에서 "이미지 저장" → 사진첩
       } catch (e) {
-        if (e.name === 'AbortError') return true;   // 사용자가 취소
-        return false;
+        return e.name === 'AbortError' ? 'cancelled' : 'failed';
       }
     }
 
     // ── iOS: standalone PWA에서 <a download>가 동작하지 않음 → 공유시트가 유일한 경로
     if (isIOSDevice() && canShareFile) {
-      if (await shareFile()) return;
+      const r = await shareFile();
+      if (r !== 'failed') return r;    // 'shared' | 'cancelled'
     }
 
     // ── 안드로이드·데스크톱: 바로 다운로드 (갤럭시는 다운로드 폴더 → 갤러리에 바로 보임)
@@ -4018,11 +4040,14 @@ const sketchImages = {
       a.click();
       document.body.removeChild(a);
       setTimeout(() => URL.revokeObjectURL(url), 1000);
-      return;
+      return 'downloaded';
     }
 
     // ── 최후 폴백: 다운로드가 막힌 환경
-    if (canShareFile && await shareFile()) return;
+    if (canShareFile) {
+      const r = await shareFile();
+      if (r !== 'failed') return r;
+    }
     throw new Error('이 브라우저에서는 저장할 수 없습니다');
   }
 
@@ -4576,6 +4601,48 @@ const sketchImages = {
 
   // ══════════════ 위해안내서 ══════════════
   const WIHAE_SETTINGS_KEY = 'tbm_wihaeIssuer';
+  let wihaeSigDataURL = null;   // 수령인 서명 (발부 건별, 저장 안 함)
+
+  // 수령인 서명 패드 열기 — 기존 서명패드 모달 재사용
+  function openWihaeSigPad() {
+    initSigPad();
+    clearSigPad();
+    if (wihaeSigDataURL) {
+      const pad = document.getElementById('sig-pad');
+      const img = new Image();
+      img.onload = () => _sigPadCtx.drawImage(img, 0, 0, pad.width, pad.height);
+      img.src = wihaeSigDataURL;
+    }
+    document.getElementById('sig-modal-title').textContent = '수령인 서명';
+    _sigSaveCallback = (dataURL) => {
+      wihaeSigDataURL = dataURL;
+      renderWihaeSig();
+    };
+    document.getElementById('sig-modal').style.display = 'flex';
+  }
+
+  function clearWihaeSig() {
+    wihaeSigDataURL = null;
+    renderWihaeSig();
+  }
+
+  function renderWihaeSig() {
+    const img   = document.getElementById('wh-sig-img');
+    const hint  = document.getElementById('wh-sig-hint');
+    const clear = document.getElementById('wh-sig-clear');
+    if (!img) return;
+    if (wihaeSigDataURL) {
+      img.src = wihaeSigDataURL;
+      img.style.display   = 'block';
+      hint.style.display  = 'none';
+      clear.style.display = 'block';
+    } else {
+      img.removeAttribute('src');
+      img.style.display   = 'none';
+      hint.style.display  = 'block';
+      clear.style.display = 'none';
+    }
+  }
 
   // 발행처 정보 복원 (본부·지사·부·전화·발행자는 거의 안 바뀌므로 저장)
   function loadWihaeSettings() {
@@ -4630,19 +4697,27 @@ const sketchImages = {
 
   async function generateWihaeCanvas() {
     const SCALE = 0.5;
-    const W = 709, H = 834;          // 베이스 1417×1667 의 0.5배
+    const W = Math.round(WIHAE_PAGE.W * SCALE);   // 827  (A4 200dpi의 0.5배)
+    const H = Math.round(WIHAE_PAGE.H * SCALE);   // 1170
 
     const canvas = document.createElement('canvas');
     canvas.width = W; canvas.height = H;
     const ctx = canvas.getContext('2d');
 
-    const sx = x => x * SCALE;
-    const sy = y => y * SCALE;
+    // 좌표는 양식(1417×1667) 기준 → A4 안에서의 위치로 변환
+    const sx = x => (x + WIHAE_PAGE.OX) * SCALE;
+    const sy = y => (y + WIHAE_PAGE.OY) * SCALE;
+    const sw = v => v * SCALE;                   // 폭·높이는 오프셋 없이 배율만
 
-    // ── 1. 배경 이미지 ──
+    // ── 1. A4 흰 바탕 + 양식 배치 ──
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, W, H);
     await new Promise((resolve, reject) => {
       const img = new Image();
-      img.onload = () => { ctx.drawImage(img, 0, 0, W, H); resolve(); };
+      img.onload = () => {
+        ctx.drawImage(img, sx(0), sy(0), sw(1417), sw(1667));
+        resolve();
+      };
       img.onerror = reject;
       img.src = typeof wihaePageBase64 !== 'undefined' ? wihaePageBase64 : '';
     });
@@ -4674,7 +4749,7 @@ const sketchImages = {
       const c1 = wihaeCoords.content_l1, c2 = wihaeCoords.content_l2;
       setFont(c1);
       ctx.textAlign = 'left';
-      const fits = (str, x) => ctx.measureText(str).width <= sx(RIGHT - x);
+      const fits = (str, x) => ctx.measureText(str).width <= sw(RIGHT - x);
 
       if (fits(d.content, c1.x)) {
         ctx.fillText(d.content, sx(c1.x), sy(c1.y));
@@ -4703,6 +4778,18 @@ const sketchImages = {
     drawText(d.addr,   wihaeCoords.r_addr);
     drawText(d.name,   wihaeCoords.r_name);
     drawText(d.issuer, wihaeCoords.r_issuer);
+
+    // ── 수령인 서명 ──
+    if (wihaeSigDataURL) {
+      const c = wihaeCoords.r_sig;
+      const sig = await new Promise(resolve => {
+        const img = new Image();
+        img.onload  = () => resolve(img);
+        img.onerror = () => resolve(null);
+        img.src = wihaeSigDataURL;
+      });
+      if (sig) ctx.drawImage(sig, sx(c.x), sy(c.y), sw(c.w), sw(c.h));
+    }
 
     ctx.textAlign = 'left';
     return canvas;
@@ -4735,12 +4822,24 @@ const sketchImages = {
       const canvas = await generateWihaeCanvas();
       const dateStr = (d.dateRaw || getTodayStr()).replace(/[.\-\/]/g, '');
       const nameStr = d.name.replace(/\s/g, '').slice(0, 8);
-      await downloadCanvas(canvas, `위해안내서_${nameStr}_${dateStr}.jpg`);
+      const result = await downloadCanvas(canvas, `위해안내서_${nameStr}_${dateStr}.jpg`);
+      if (result === 'cancelled') return;          // 공유시트를 닫음 — 입력값 유지
       document.getElementById('wihae-modal').style.display = 'none';
-      showToast('저장되었습니다');
+      resetWihaeTarget();
+      showToast('저장 완료 — 다음 발부 준비됨');
     } catch (e) {
       showToast('저장 실패: ' + e.message);
     }
+  }
+
+  // 발부 1건 완료 → 대상자 정보·서명만 비우고 발행처는 유지
+  // (앞사람 서명이 남은 채로 다음 사람에게 발부되는 사고 방지)
+  function resetWihaeTarget() {
+    ['wh-no','wh-addr','wh-name','wh-content'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    clearWihaeSig();
   }
 
   // ── 미리보기 모달 ──
