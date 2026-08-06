@@ -1,9 +1,10 @@
-const CACHE_NAME = 'tbm-v2';
+const CACHE_NAME = 'tbm-v3';
 
 const STATIC_FILES = [
   './manifest.json',
   './data.js',
   './page9_base.js',
+  './wihae_base.js',
   './tbm_base.js',
   './cl_p1_base.js',
   './cl_p2_base.js',
