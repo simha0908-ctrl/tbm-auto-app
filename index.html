@@ -683,7 +683,10 @@
         </div>
         <div class="mode-arrow">›</div>
       </div>
-      <div class="mode-card" onclick="go('s-wihae')">
+      <!-- 위해안내서 — 비활성. 결과물 품질 문제로 현장 사용 보류.
+           다시 열려면 아래 style의 display:none 만 지우면 됨
+           (화면 s-wihae·좌표·생성 로직은 그대로 살아있음) -->
+      <div class="mode-card" id="mode-card-wihae" style="display:none;" onclick="go('s-wihae')">
         <div class="mode-icon" style="background:#FFF1E0;">⚠️</div>
         <div class="mode-info">
           <div class="mode-title">위해안내서</div>
