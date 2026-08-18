@@ -2262,8 +2262,8 @@ const sketchImages = {
     } else {
       const now2      = new Date();
       const rounded2  = Math.round((now2.getHours() * 60 + now2.getMinutes()) / 30) * 30;
-      const endH      = Math.floor((rounded2 + 180) / 60) % 24;
-      const endM      = (rounded2 + 180) % 60;
+      const endH      = Math.floor((rounded2 + 60) / 60) % 24;
+      const endM      = (rounded2 + 60) % 60;
       sessionData.time_end = String(endH).padStart(2, '0') + ':' + String(endM).padStart(2, '0');
     }
     syncConfirmToSession();  // 작업자 이름을 sessionData에 반영 (sig-check에서 사용)
@@ -2981,8 +2981,8 @@ const sketchImages = {
       const _r      = Math.round((_now.getHours() * 60 + _now.getMinutes()) / 30) * 30;
       const _sH     = Math.floor(_r / 60) % 24;
       const _sM     = _r % 60;
-      const _eH     = Math.floor((_r + 180) / 60) % 24;
-      const _eM     = (_r + 180) % 60;
+      const _eH     = Math.floor((_r + 60) / 60) % 24;
+      const _eM     = (_r + 60) % 60;
       const _tsEl   = document.getElementById('add-time-start');
       const _teEl   = document.getElementById('add-time-end');
       if (_tsEl) _tsEl.value = String(_sH).padStart(2,'0') + ':' + String(_sM).padStart(2,'0');
@@ -3020,7 +3020,7 @@ const sketchImages = {
           if (mode === 'new') {
             const _now2 = new Date();
             const _rounded2 = Math.round((_now2.getHours() * 60 + _now2.getMinutes()) / 30) * 30;
-            const _eRounded = _rounded2 + 180;
+            const _eRounded = _rounded2 + 60;
             const _eH = Math.floor(_eRounded / 60) % 24;
             const _eM = _eRounded % 60;
             sessionData.time_end = String(_eH).padStart(2, '0') + ':' + String(_eM).padStart(2, '0');
