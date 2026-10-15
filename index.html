@@ -2148,6 +2148,33 @@ const sketchImages = {
   // 작업계획서 내용(sessionData·공종·위험요인)이 추가작업 때 날아갔다.
   // iOS는 페이지를 살려둬서 증상이 안 나타났음. → localStorage에 스냅샷 저장.
   const LAST_SESSION_KEY = 'tbm_lastSession';
+  // 작업계획서 촬영본도 메모리(window._capturedImageDataUrl)에만 있어서, 안드로이드에서
+  // 재로드되면 추가작업 합본 좌상단이 플레이스홀더로 나갔다 → 축소본을 별도 키로 저장.
+  // (용량 초과 시 텍스트 스냅샷까지 실패하지 않도록 키를 분리)
+  const LAST_PLAN_IMG_KEY = 'tbm_lastPlanImg';
+
+  // 합본 칸(827×1169)에 cover로 그려지므로 긴 변 1400px이면 충분
+  function shrinkImageDataUrl(dataUrl, maxSide) {
+    return new Promise(function(resolve) {
+      const img = new Image();
+      img.onload = function() {
+        const scale = Math.min(1, maxSide / Math.max(img.naturalWidth, img.naturalHeight));
+        const c = document.createElement('canvas');
+        c.width  = Math.round(img.naturalWidth  * scale);
+        c.height = Math.round(img.naturalHeight * scale);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        try { resolve(c.toDataURL('image/jpeg', 0.85)); } catch(e) { resolve(null); }
+      };
+      img.onerror = function() { resolve(null); };
+      img.src = dataUrl;
+    });
+  }
+
+  // 신규작업에서 축소본이 만들어졌을 때만 기록 (추가작업 중엔 기존 저장본 유지)
+  function saveLastPlanImg() {
+    if (!window._capturedImageSmall) return;
+    try { localStorage.setItem(LAST_PLAN_IMG_KEY, window._capturedImageSmall); } catch(e) {}
+  }
 
   function saveLastSession() {
     try {
@@ -2159,6 +2186,7 @@ const sketchImages = {
         confirmWorkers: confirmWorkers.map(w => ({ name: w.name, role: w.role })),
       }));
     } catch(e) {}
+    saveLastPlanImg();
   }
 
   function restoreLastSession() {
@@ -2174,6 +2202,13 @@ const sketchImages = {
     if (Array.isArray(s.selectedRisks))        selectedRisks = s.selectedRisks;
     if (Array.isArray(s.confirmWorkers) && s.confirmWorkers.length) {
       confirmWorkers = s.confirmWorkers;
+    }
+    // 메모리에 촬영본이 없을 때(안드로이드 재로드)만 저장본으로 복원
+    if (!window._capturedImageDataUrl) {
+      try {
+        const img = localStorage.getItem(LAST_PLAN_IMG_KEY);
+        if (img) window._capturedImageDataUrl = img;
+      } catch(e) {}
     }
     return true;
   }
@@ -2789,6 +2824,10 @@ const sketchImages = {
     reader.onload = function(e) {
       const dataUrl = e.target.result;
       window._capturedImageDataUrl = dataUrl;
+      window._capturedImageSmall   = null;
+      shrinkImageDataUrl(dataUrl, 1400).then(function(small) {
+        if (window._capturedImageDataUrl === dataUrl) window._capturedImageSmall = small;
+      });
 
       // 미리보기 표시
       const previewImg  = document.getElementById('upload-preview-img');
@@ -2940,6 +2979,7 @@ const sketchImages = {
     if (id === 's-camera') {
       resetSession();
       window._capturedImageDataUrl = null;
+      window._capturedImageSmall   = null;
       // 파일 입력·미리보기 초기화
       const camInput = document.getElementById('photo-input-camera');
       const galInput = document.getElementById('photo-input-gallery');
