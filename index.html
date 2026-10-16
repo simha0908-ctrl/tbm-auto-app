@@ -2183,6 +2183,7 @@ const sketchImages = {
         sessionData:    sessionData,
         selectedGong:   selectedGong,
         selectedRisks:  selectedRisks,
+        vehicleType:    selectedVehicleType,
         confirmWorkers: confirmWorkers.map(w => ({ name: w.name, role: w.role })),
       }));
     } catch(e) {}
@@ -2200,6 +2201,7 @@ const sketchImages = {
 
     if (s.selectedGong && s.selectedGong.code) selectedGong = s.selectedGong;
     if (Array.isArray(s.selectedRisks))        selectedRisks = s.selectedRisks;
+    if (s.vehicleType && VEHICLE_SPECS[s.vehicleType]) selectedVehicleType = s.vehicleType;
     if (Array.isArray(s.confirmWorkers) && s.confirmWorkers.length) {
       confirmWorkers = s.confirmWorkers;
     }
@@ -2392,6 +2394,18 @@ const sketchImages = {
   function resetSession() {
     sessionSigs = {};  // 신규작업: 서명 초기화
     try { localStorage.removeItem('tbm_sigs'); } catch(e) {}
+    // ── 작업 정보 ──
+    // 아이폰은 페이지를 살려두므로 이전 작업의 날짜·장소·시간이 남아 다음날 신규작업에
+    // 그대로 채워졌다. 안드로이드(재로드 시 빈 값)와 같게 새 값으로 시작.
+    sessionData = {
+      date:         getTodayInputStr(),
+      location:     '',
+      work_content: '',
+      worker1_name: '',
+      worker2_name: '',
+      worker3_name: '',
+      supervisor:   '',
+    };
     // ── 상태 변수 ──
     selectedGong          = { code: 'D17', name: '수목 및 나뭇가지 자르기' };
     confirmWorkers        = [{ name: '', role: '작업지휘자' }];
@@ -4264,7 +4278,13 @@ const sketchImages = {
 
       // ── 합본 다운로드 ──
       setSaveProgress('⏳ 저장 중...');
-      await downloadCanvas(combined, `${prefix}.jpg`);
+      const saveResult = await downloadCanvas(combined, `${prefix}.jpg`);
+      if (saveResult === 'cancelled') {
+        // 아이폰 공유시트를 닫음 — 저장 안 됐으므로 완료·이력 처리 없이 미리보기에 머무름
+        setSaveProgress('');
+        showToast('⚠️ 저장이 취소됐어요. 다시 눌러 "이미지 저장"을 선택하세요');
+        return;
+      }
 
       // ── 완료 화면 업데이트 ──
       const doneSubEl   = document.getElementById('done-sub');
